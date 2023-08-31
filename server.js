@@ -1,6 +1,23 @@
+require('dotenv').config();
 const express = require('express');
+const mongoose = require('mongoose');
+
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// MongoDB connection string
+const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/MangaMatch'; 
+
+// Connect to MongoDB
+mongoose.connect(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log('MongoDB connected'))
+.catch(err => console.log(err));
+
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
