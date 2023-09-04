@@ -21,10 +21,15 @@ const mangaSchema = new Schema({
     updated_at: String, // Keeping as String for now, but consider using Date if applicable
     real_start_date: Date,
     real_end_date: Date,
-    genres: String,
-    themes: String,
-    demographics: String,
-    authors: String, // This seems to be a stringified array of objects, but consider creating a separate schema for this if needed
+    genres: [String],
+    themes: [String],
+    demographics: [String],
+    authors: [{
+        id: Number,
+        first_name: String,
+        last_name: String,
+        role: String
+    }],
     serializations: String,
     synopsis: String,
     background: String,

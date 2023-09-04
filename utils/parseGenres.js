@@ -2,8 +2,14 @@
 
 // Function to extract individual genres from a string
 function parseGenres(genresString) {
-    const genres = genresString.slice(1, -1).split(', ');
-    return genres.map(genre => genre.slice(1, -1));
+    if (Array.isArray(genresString)) {
+        return genresString;
+    }
+
+    return genresString.slice(1, -1)
+        .split(',')
+        .map(genre => genre.trim().slice(1, -1));
 }
 
 module.exports = parseGenres;
+
