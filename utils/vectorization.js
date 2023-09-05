@@ -42,7 +42,6 @@ function mangaToVector(manga) {
         vector.push(genres.includes(genre) ? 1 : 0);
     }
 
-    console.log(`Vector for manga ID ${manga.manga_id}:`, vector);
     return vector;
 }
 
@@ -111,21 +110,32 @@ function findTopNSimilar(targetVector, vectors) {
 
 
 /**
- * Find common genres between two vectors
+ * Finds the common genres between a vector and a list of other vectors.
  * 
- * @param {Array} vecA - The first vector.
- * @param {Array} vecB - The second vector.
- * @returns {Array} - An array of common genres.
+ * @param {Array} vectors - The list of target vectors.
+ * @param {Array} vecToCompare - The vector to compare with the list.
+ * @returns {Object} - The common genres and their occurrence counts.
  */
-function findCommonGenres(vecA, vecB) {
-    const common = [];
-    for (let i = 0; i < vecA.length; i++) {
-        if (vecA[i] === 1 && vecB[i] === 1) {
-            common.push(genreList[i]);
+function findCommonGenres(vectors, vecToCompare) {
+    let commonGenreCounts = {};
+
+    for (let i = 0; i < vecToCompare.length; i++) {
+        if (vecToCompare[i] === 1) {
+            for (let vec of vectors) {
+                if (vec[i] === 1) {
+                    commonGenreCounts[genreList[i]] = (commonGenreCounts[genreList[i]] || 0) + 1;
+                }
+            }
         }
     }
-    return common;
+
+    const commonGenres = Object.entries(commonGenreCounts)  // Changed from genreCount to commonGenreCounts
+        .sort((a, b) => b[1] - a[1])
+        .map(([genre, count]) => `${genre}(${count})`);
+
+    return commonGenres;
 }
+
 
 module.exports = {
     mangaToVector,

@@ -8,11 +8,20 @@ const {
     findCommonGenres
 } = require('../utils/vectorization');
 
+const BATCH_SIZE = 50;
+
+async function processBatch(targetVector, batch, callback) {
+    const batchResult = findTopNSimilar(targetVector, batch);
+    if (callback) callback(batchResult);
+    return batchResult;
+}
+
+
 router.post('/', async (req, res) => {
     try {
         const { mangaIds } = req.body;
         const targetMangas = await Manga.find({ manga_id: { $in: mangaIds } });
-        const allMangas = await Manga.find({}).limit(10);
+        const allMangas = await Manga.find({});
 
         const targetVectors = targetMangas.map(mangaToVector);
         const allVectors = allMangas.map(manga => ({ item: manga, vector: mangaToVector(manga) }));
@@ -25,15 +34,19 @@ router.post('/', async (req, res) => {
         const topMangas = findTopNSimilar(avgVector, filteredVectors);
 
 
-        console.log("Top 5 mangas and their cosine similarities:", topMangas.map(m => {
-            const commonGenres = findCommonGenres(avgVector, m.vector);
-            return {
-                mangaId: m.item.manga_id,
-                title: m.item.title,
-                similarity: m.similarity,
-                commonGenres
-            };
-        }));
+        console.log("Top 5 mangas and their cosine similarities:",
+            JSON.stringify(
+                topMangas.map(m => {
+                    const commonGenres = findCommonGenres(targetVectors, m.vector);
+                    return {
+                        mangaId: m.item.manga_id,
+                        title: m.item.title,
+                        similarity: m.similarity,
+                        commonGenres // Now an object with genre as key and occurrence count as value
+                    };
+                }), null, 2
+            )
+        );
 
 
         res.status(200).send(topMangas.map(m => m.item));
