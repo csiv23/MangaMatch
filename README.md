@@ -15,6 +15,20 @@ MangaMatch is an recommendation engine aiming to help manga enthusiasts discover
 - **Database**: MongoDB
 - **State Management**: Redux (planned for future updates)
 
+
+## What I Learned
+
+- **MongoDB**: Beyond just basic CRUD operations, I learned about data modeling and schema design, specifically the challenges of handling hierarchical data. I've also done some data cleaning through MongoDB to prepare the database for vectorization.
+  
+- **Express and API Development**: Strengthened my understanding of RESTful APIs using Express.js, incorporating middleware for logging and error-handling.
+  
+- **MERN Stack**: Gained experience in full-stack development by integrating MongoDB, Express.js, React, and Node.js. This project is an excellent showcase of frontend-backend data flow and state management.
+  
+- **Linear Algebra Applications**: Applied cosine similarity to develop an advanced recommendation algorithm based on vectorized attributes.
+
+- **Project Management**: Navigated the complexities of building a nuanced feature set while keeping an eye on performance, usability, and code quality. 
+
+
 ## Quick Start
 
 1. **Clone the repository**:
