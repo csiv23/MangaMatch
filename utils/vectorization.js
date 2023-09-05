@@ -1,4 +1,3 @@
-// vectorization.js
 const { safeParseJSON } = require('./jsonHelper');  // Import the function
 
 // Sorted and array-form of unique genres
@@ -57,9 +56,8 @@ function cosineSimilarity(vecA, vecB) {
         normB += vecB[i] ** 2;
     }
 
-    // Debug and error checks
     if (normA === 0 || normB === 0) {
-        return 0; // or other value to indicate the error
+        return 0;
     }
 
     const similarity = dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
@@ -69,18 +67,12 @@ function cosineSimilarity(vecA, vecB) {
 
 // Add this function to compute average vector
 function computeAverageVector(vectors) {
-    const avgVector = [];
+    const avgVector = new Array(genreList.length).fill(0);
+
+    // Sum up vectors
     for (const vec of vectors) {
-        if (avgVector.length === 0) {
-            // Initialize avgVector on first iteration
-            for (let i = 0; i < vec.length; i++) {
-                avgVector[i] = vec[i];
-            }
-        } else {
-            // Sum up vectors
-            for (let i = 0; i < avgVector.length; i++) {
-                avgVector[i] += vec[i];
-            }
+        for (let i = 0; i < avgVector.length; i++) {
+            avgVector[i] += vec[i];
         }
     }
 
@@ -104,9 +96,8 @@ function findTopNSimilar(targetVector, vectors) {
         return { item: vec.item, similarity: cosineSimilarity(targetVector, vec.vector), vector: vec.vector };
     })
         .sort((a, b) => b.similarity - a.similarity)
-        .slice(0, 5);
+        .slice(0, 10);  // Changed from top 5 to top 10
 }
-
 
 /**
  * Finds the common genres between a vector and a list of other vectors.
@@ -128,13 +119,12 @@ function findCommonGenres(vectors, vecToCompare) {
         }
     }
 
-    const commonGenres = Object.entries(commonGenreCounts)  // Changed from genreCount to commonGenreCounts
+    const commonGenres = Object.entries(commonGenreCounts)
         .sort((a, b) => b[1] - a[1])
         .map(([genre, count]) => `${genre}(${count})`);
 
     return commonGenres;
 }
-
 
 module.exports = {
     mangaToVector,
