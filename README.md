@@ -1,6 +1,6 @@
-# MangaMatch: Advanced Manga Recommendation Engine
+# MangaMatch: Manga Recommendation Engine
 
-MangaMatch is an advanced recommendation engine aiming to help manga enthusiasts discover series tailored to their individual tastes.
+MangaMatch is an recommendation engine aiming to help manga enthusiasts discover series tailored to their individual tastes.
 
 ## Features
 
