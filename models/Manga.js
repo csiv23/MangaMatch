@@ -24,12 +24,7 @@ const mangaSchema = new Schema({
     genres: [String],
     themes: [String],
     demographics: [String],
-    authors: [{
-        id: Number,
-        first_name: String,
-        last_name: String,
-        role: String
-    }],
+    authors: [String],
     serializations: String,
     synopsis: String,
     background: String,
@@ -43,4 +38,4 @@ const mangaSchema = new Schema({
 mangaSchema.index({ title: 'text' });
 
 // Export the model
-module.exports = mongoose.model('MangaMatch', mangaSchema, 'Manga');
+module.exports = mongoose.model('MangaMatch', mangaSchema, 'Manga2');
