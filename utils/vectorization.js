@@ -1,5 +1,8 @@
 // vectorization.js
 
+const { safeParseJSON } = require('./jsonHelper');  // Import the function
+
+
 /**
  * Builds a list of all unique genres across all mangas.
  * 
@@ -8,13 +11,15 @@
  */
 function buildGenreList(allMangas) {
     let genreSet = new Set();
-    
+
     for (const manga of allMangas) {
-        for (const genre of manga.genres) {
+        const genres = safeParseJSON(manga.genres[0], []);
+        for (const genre of genres) {
             genreSet.add(genre);
         }
     }
 
+    console.log(`Built genre list: ${JSON.stringify(Array.from(genreSet))}`);
     return Array.from(genreSet);
 }
 
@@ -28,11 +33,12 @@ function buildGenreList(allMangas) {
  * @param {Array} genreList - List of genres for vectorization.
  * @returns {Array} - The binary vector representation of the manga's genres.
  */
+// in vectorization.js
 function mangaToVector(manga, genreList) {
     let vector = [];
-
+    const genres = safeParseJSON(manga.genres[0], []);
     for (const genre of genreList) {
-        vector.push(manga.genres.includes(genre) ? 1 : 0);
+        vector.push(genres.includes(genre) ? 1 : 0);
     }
 
     return vector;
