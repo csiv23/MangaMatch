@@ -1,57 +1,46 @@
 const express = require('express');
 const router = express.Router();
 const Manga = require('../models/Manga');
-const { mangaToVector, cosineSimilarity } = require('../utils/vectorization');
+const {
+    mangaToVector,
+    computeAverageVector,
+    findTopNSimilar,
+    findCommonGenres
+} = require('../utils/vectorization');
 
-
-router.get('/:mangaId', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
-        const targetManga = await Manga.findOne({ manga_id: req.params.mangaId });
-        const allMangas = await Manga.find({}).limit(100);  // Limit to 100 records
+        const { mangaIds } = req.body;
+        const targetMangas = await Manga.find({ manga_id: { $in: mangaIds } });
+        const allMangas = await Manga.find({}).limit(10);
 
-        console.log('Target Manga:', targetManga);
-        console.log('Number of Mangas:', allMangas.length);
+        const targetVectors = targetMangas.map(mangaToVector);
+        const allVectors = allMangas.map(manga => ({ item: manga, vector: mangaToVector(manga) }));
 
-        const targetVector = mangaToVector(targetManga);
+        const avgVector = computeAverageVector(targetVectors);
 
-        let topMatches = [];
+        // Filter out mangas that were originally in the payload
+        const filteredVectors = allVectors.filter(vec => !mangaIds.includes(vec.item.manga_id.toString()));
 
-        for (const manga of allMangas) {
-            if (manga.manga_id !== targetManga.manga_id && manga.genres) {
-                const vec = mangaToVector(manga);
+        const topMangas = findTopNSimilar(avgVector, filteredVectors);
 
-                if (vec.every(val => val === 0)) {
-                    continue; // Skip this iteration as the vector is all zeros
-                }
 
-                const similarity = cosineSimilarity(targetVector, vec);
-                console.log(`Similarity between ${targetManga.title} and ${manga.title}: ${similarity}`);
+        console.log("Top 5 mangas and their cosine similarities:", topMangas.map(m => {
+            const commonGenres = findCommonGenres(avgVector, m.vector);
+            return {
+                mangaId: m.item.manga_id,
+                title: m.item.title,
+                similarity: m.similarity,
+                commonGenres
+            };
+        }));
 
-                if (isNaN(similarity)) {
-                    continue; // Skip this iteration if similarity is NaN
-                }
 
-                topMatches.push({ manga, similarity });
-            }
-        }
-
-        // Sort by highest similarity and take the top 5
-        topMatches.sort((a, b) => b.similarity - a.similarity);
-        const top5Matches = topMatches.slice(0, 5).map(match => match.manga);
-
-        if (top5Matches.length > 0) {
-            res.status(200).send(top5Matches);
-        } else {
-            res.status(200).send("No recommendations found.");
-        }
-
+        res.status(200).send(topMangas.map(m => m.item));
     } catch (err) {
         console.error(err);
         res.status(500).send('Something went wrong!');
     }
 });
-
-
-
 
 module.exports = router;
