@@ -59,7 +59,6 @@ function cosineSimilarity(vecA, vecB) {
 
     // Debug and error checks
     if (normA === 0 || normB === 0) {
-        console.error('Vector with zero magnitude found, check your data:', vecA, vecB);
         return 0; // or other value to indicate the error
     }
 
