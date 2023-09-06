@@ -25,43 +25,106 @@ const genreList = [
     'Suspense'
 ].sort();
 
-/**
- * Converts a single manga object into a binary vector based on the given genre list.
- * 
- * Each position in the vector corresponds to a genre. If the manga is of that genre, 
- * that position will have a `1`, otherwise it will be `0`.
- * 
- * @param {Object} manga - A manga object.
- * @returns {Array} - The binary vector representation of the manga's genres.
- */
+const themeList = [
+    'Gore',
+    'Military',
+    'Mythology',
+    'Psychological',
+    'Historical',
+    'Samurai',
+    'Romantic Subtext',
+    'School',
+    'Adult Cast',
+    'Parody',
+    'Super Power',
+    'Team Sports',
+    'Delinquents',
+    'Workplace',
+    'Survival',
+    'Childcare',
+    'Iyashikei',
+    'Reincarnation',
+    'Showbiz',
+    'Anthropomorphic',
+    'Love Polygon',
+    'Music',
+    'Mecha',
+    'Combat Sports',
+    'Isekai',
+    'Gag Humor',
+    'Crossdressing',
+    'Reverse Harem',
+    'Martial Arts',
+    'Visual Arts',
+    'Harem',
+    'Otaku Culture',
+    'Time Travel',
+    'Video Game',
+    'Strategy Game',
+    'Vampire',
+    'Mahou Shoujo',
+    'High Stakes Game',
+    'CGDCT',
+    'Organized Crime',
+    'Detective',
+    'Performing Arts',
+    'Medical',
+    'Space',
+    'Memoir',
+    'Villainess',
+    'Racing',
+    'Pets',
+    'Magical Sex Shift',
+    'Educational',
+    'Idols (Female)',
+    'Idols (Male)'
+].sort();
+
+// Assuming genreList and themeList are arrays of unique strings
+const combinedList = [...genreList, ...themeList];
+
+
+// Converts a single manga object into a binary vector based on the combinedList.
 function mangaToVector(manga) {
     let vector = [];
     const genres = safeParseJSON(manga.genres[0], []);
-    for (const genre of genreList) {
-        vector.push(genres.includes(genre) ? 1 : 0);
+    const themes = safeParseJSON(manga.themes[0], []);
+
+    const allAttributes = [...genres, ...themes];
+
+    // Process genres and themes
+    for (const item of combinedList) {
+        vector.push(allAttributes.includes(item) ? 1 : 0);
     }
 
     return vector;
 }
 
+
 // Function to calculate cosine similarity between two vectors
-function cosineSimilarity(vecA, vecB) {
+function cosineSimilarity(vecA, vecB, themesOffset) {
     let dotProduct = 0;
     let normA = 0;
     let normB = 0;
 
     for (let i = 0; i < vecA.length; i++) {
+        if (i >= themesOffset) {
+            // Optional themes, don't contribute if both are 0
+            if (vecA[i] === 0 && vecB[i] === 0) {
+                continue;
+            }
+        }
         dotProduct += vecA[i] * vecB[i];
         normA += vecA[i] ** 2;
         normB += vecB[i] ** 2;
     }
 
+    // Debug and error checks
     if (normA === 0 || normB === 0) {
         return 0;
     }
 
     const similarity = dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
-
     return similarity;
 }
 
@@ -99,37 +162,33 @@ function findTopNSimilar(targetVector, vectors) {
         .slice(0, 10);  // Changed from top 5 to top 10
 }
 
-/**
- * Finds the common genres between a vector and a list of other vectors.
- * 
- * @param {Array} vectors - The list of target vectors.
- * @param {Array} vecToCompare - The vector to compare with the list.
- * @returns {Object} - The common genres and their occurrence counts.
- */
-function findCommonGenres(vectors, vecToCompare) {
-    let commonGenreCounts = {};
+
+// Updated findCommonItems to work with combinedList
+function findCommonItems(vectors, vecToCompare) {
+    let commonItemCounts = {};
+
+    if (vectors.length > 0) {
+        console.log("Length of an example vector from vectors: ", vectors[0].length);
+    }
 
     for (let i = 0; i < vecToCompare.length; i++) {
-        if (vecToCompare[i] === 1) {
+        if (vecToCompare[i] === 1 && typeof combinedList[i] !== 'undefined') {
             for (let vec of vectors) {
                 if (vec[i] === 1) {
-                    commonGenreCounts[genreList[i]] = (commonGenreCounts[genreList[i]] || 0) + 1;
+                    commonItemCounts[combinedList[i]] = (commonItemCounts[combinedList[i]] || 0) + 1;
                 }
             }
         }
     }
 
-    const commonGenres = Object.entries(commonGenreCounts)
-        .sort((a, b) => b[1] - a[1])
-        .map(([genre, count]) => `${genre}(${count})`);
-
-    return commonGenres;
+    return commonItemCounts;
 }
+
 
 module.exports = {
     mangaToVector,
     cosineSimilarity,
     computeAverageVector,
     findTopNSimilar,
-    findCommonGenres
+    findCommonItems
 };

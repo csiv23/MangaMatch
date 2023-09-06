@@ -3,7 +3,6 @@
 // Function to correct JSON string
 function correctJsonString(str) {
     if (typeof str !== 'string') {
-        console.error('Input is not a string:', str);
         return '';
     }
     return str.replace(/'/g, '"');
@@ -18,7 +17,6 @@ function correctJsonString(str) {
  */
 function safeParseJSON(input, defaultValue) {
     if (typeof input !== 'string') {
-        console.error('Input is not a string:', input);
         return defaultValue;
     }
 
