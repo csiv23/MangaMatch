@@ -167,10 +167,6 @@ function findTopNSimilar(targetVector, vectors) {
 function findCommonItems(vectors, vecToCompare) {
     let commonItemCounts = {};
 
-    if (vectors.length > 0) {
-        console.log("Length of an example vector from vectors: ", vectors[0].length);
-    }
-
     for (let i = 0; i < vecToCompare.length; i++) {
         if (vecToCompare[i] === 1 && typeof combinedList[i] !== 'undefined') {
             for (let vec of vectors) {
