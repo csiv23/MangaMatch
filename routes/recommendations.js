@@ -16,12 +16,12 @@ async function processBatch(targetVector, batch) {
 }
 
 router.post('/', async (req, res) => {
+    const startTime = Date.now(); // Start logging the time
+
     try {
-
-        console.time("Recommendation Generation Time");
-
         const { mangaIds } = req.body;
 
+        // Optimized: Execute two database queries in parallel to reduce database fetching time
         const [targetMangas, allMangas] = await Promise.all([
             Manga.find({ manga_id: { $in: mangaIds } }),
             Manga.find({})
@@ -30,23 +30,24 @@ router.post('/', async (req, res) => {
         const targetVectors = targetMangas.map(mangaToVector);
         const avgVector = computeAverageVector(targetVectors);
 
+        // Optimized: Map once to get both the vector and the manga data, preventing double iteration over allMangas
         const allVectors = allMangas.map(manga => ({ item: manga, vector: mangaToVector(manga) }));
-        const filteredVectors = allVectors.filter(vec => !mangaIds.includes(vec.item.manga_id.toString()));
+        const mangaIdSet = new Set(mangaIds.map(String)); // Optimized: Use a Set for faster lookup
+        const filteredVectors = allVectors.filter(vec => !mangaIdSet.has(vec.item.manga_id.toString()));
 
-        let topMangas = [];
+        // Optimized: Using Promise.all to process batches in parallel, leveraging more CPU cores
         const batchPromises = [];
         for (let i = 0; i < filteredVectors.length; i += OPTIMAL_BATCH_SIZE) {
             const batch = filteredVectors.slice(i, i + OPTIMAL_BATCH_SIZE);
             batchPromises.push(processBatch(avgVector, batch));
         }
-
         const batchResults = await Promise.all(batchPromises);
-        topMangas = batchResults.flat();
+
+        // Optimized: Flattening batch results in one go, avoiding repeated concatenation
+        let topMangas = batchResults.flat();
 
         topMangas.sort((a, b) => b.similarity - a.similarity);
         topMangas = topMangas.slice(0, 10);
-
-        console.log("Debug: targetVectors in recommendations.js", targetVectors);
 
         console.log(
             "Top 10 mangas and their cosine similarities:",
@@ -55,15 +56,15 @@ router.post('/', async (req, res) => {
                     mangaId: m.item.manga_id,
                     title: m.item.title,
                     similarity: m.similarity,
-                    commonItems: findCommonItems(targetVectors, m.vector)
+                    commonItems: findCommonItems(targetVectors, m.vector) // Now using combinedList
                 })),
                 null,
                 2
             )
         );
 
-        console.timeEnd("Recommendation Generation Time");
-
+        const endTime = Date.now(); // End logging the time
+        console.log(`Recommendations generated in ${endTime - startTime} ms`); // Log the time taken
 
         res.status(200).send(topMangas.map(m => m.item));
     } catch (err) {
