@@ -6,8 +6,7 @@ const bodyParser = require('body-parser');
 
 const dbConnection = require('./utils/dbConnection');
 const recommendationsRouter = require('./routes/recommendations');
-const suggestionsRouter = require('./routes/suggestions'); 
-const searchRoutes = require('./routes/search');
+const searchRouter = require('./routes/search');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -30,9 +29,7 @@ app.get('/api/recommend/debug/:mangaId', (req, res) => {
 });
 
 app.use('/api/recommend', recommendationsRouter);
-app.use('/api/search', searchRoutes);
-app.use('/api/suggestions', suggestionsRouter); // Use the new route
-
+app.use('/api/search', searchRouter); // Now includes search and suggestions routes
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
