@@ -1,6 +1,5 @@
-// SearchBar.js
-
 import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function SearchBar() {
     const [query, setQuery] = useState('');
@@ -26,7 +25,6 @@ function SearchBar() {
         }
     };
 
-
     const fetchSuggestions = async (query) => {
         try {
             const response = await fetch(`/api/search/suggestions?title=${query}`);
@@ -38,21 +36,30 @@ function SearchBar() {
     };
 
     return (
-        <div>
-            <input
-                type="text"
-                value={query}
-                onChange={(e) => {
-                    setQuery(e.target.value);
-                    fetchSuggestions(e.target.value); // Consider debouncing this call
-                }}
-                placeholder="Enter manga title..."
-            />
+        <div className="container mt-3">
+            <div className="input-group mb-3">
+                <input
+                    type="text"
+                    className="form-control"
+                    value={query}
+                    onChange={(e) => {
+                        setQuery(e.target.value);
+                        fetchSuggestions(e.target.value); // Consider debouncing this call
+                    }}
+                    placeholder="Enter manga title..."
+                />
+                <button className="btn btn-outline-secondary" type="button" onClick={handleSearch}>
+                    Search
+                </button>
+            </div>
+
             {/* Display suggestions and allow users to select a suggestion */}
             {suggestions.length > 0 && (
-                <div>
+                <div className="list-group">
                     {suggestions.map((suggestion) => (
-                        <div
+                        <button
+                            type="button"
+                            className="list-group-item list-group-item-action"
                             key={suggestion.manga_id} // Use manga_id as key
                             onClick={() => {
                                 setQuery(suggestion.title);
@@ -61,11 +68,10 @@ function SearchBar() {
                             }}
                         >
                             {suggestion.title} - {suggestion.info}
-                        </div>
+                        </button>
                     ))}
                 </div>
             )}
-            <button onClick={handleSearch}>Search</button>
         </div>
     );
 }
