@@ -83,23 +83,35 @@ const themeList = [
 // Assuming genreList and themeList are arrays of unique strings
 const combinedList = [...genreList, ...themeList];
 
+const vectorMemo = new Map();
+
+
 
 // Converts a single manga object into a binary vector based on the combinedList.
 function mangaToVector(manga) {
-    let vector = [];
     const genres = safeParseJSON(manga.genres[0], []);
     const themes = safeParseJSON(manga.themes[0], []);
-
     const allAttributes = [...genres, ...themes];
+
+    // Create a key to check in memo map
+    const attributesKey = allAttributes.sort().join(',');
+
+    if (vectorMemo.has(attributesKey)) {
+        return vectorMemo.get(attributesKey);
+    }
+
+    let vector = [];
 
     // Process genres and themes
     for (const item of combinedList) {
         vector.push(allAttributes.includes(item) ? 1 : 0);
     }
 
+    // Save the calculated vector in the memo map before returning it
+    vectorMemo.set(attributesKey, vector);
+
     return vector;
 }
-
 
 // Function to calculate cosine similarity between two vectors
 function cosineSimilarity(vecA, vecB, themesOffset) {
