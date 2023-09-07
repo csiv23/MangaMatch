@@ -34,7 +34,7 @@ router.get('/suggestions', async (req, res, next) => {
     try {
         const { title } = req.query;
         if (!title) {
-            return res.status(400).send('Title query parameter is required');
+            return res.status(200).json([]); // Return an empty array if title is not provided
         }
 
         const regex = new RegExp(title, 'i'); // Case insensitive regex
@@ -51,6 +51,5 @@ router.get('/suggestions', async (req, res, next) => {
     }
 });
 
-module.exports = router;
 
 module.exports = router;
