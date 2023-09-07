@@ -159,7 +159,7 @@ function findTopNSimilar(targetVector, vectors) {
         return { item: vec.item, similarity: cosineSimilarity(targetVector, vec.vector), vector: vec.vector };
     })
         .sort((a, b) => b.similarity - a.similarity)
-        .slice(0, 10);  // Changed from top 5 to top 10
+        .slice(0, 5);  // Return top 5
 }
 
 
@@ -177,7 +177,16 @@ function findCommonItems(vectors, vecToCompare) {
         }
     }
 
-    return commonItemCounts;
+    // Get the keys and sort them based on the value
+    const sortedKeys = Object.keys(commonItemCounts).sort((a, b) => commonItemCounts[b] - commonItemCounts[a]);
+
+    // Create a new sorted object
+    const sortedCommonItems = {};
+    for (const key of sortedKeys) {
+        sortedCommonItems[key] = commonItemCounts[key];
+    }
+
+    return sortedCommonItems;
 }
 
 
