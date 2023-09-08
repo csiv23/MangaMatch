@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MangaContext } from '../../contexts/MangaContext'; 
+import { MangaContext } from '../../contexts/MangaContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MangaSuggestions from './MangaSuggestions';
 import SelectedMangaList from './SelectedMangaList';
@@ -12,9 +12,12 @@ function SearchBar() {
     const [suggestions, setSuggestions] = useState([]);
     const [selectedMangaIds, setSelectedMangaIds] = useState([]);
     const [selectedMangaTitles, setSelectedMangaTitles] = useState([]);
+    const [loading, setLoading] = useState(false); // New state variable for loading
+
 
     const handleSearch = async () => {
         try {
+            setLoading(true); // Set loading to true when the search starts
             if (selectedMangaIds.length > 0) {
                 const response = await fetch(`http://localhost:5000/api/recommend/`, {
                     method: 'POST',
@@ -25,11 +28,13 @@ function SearchBar() {
                 });
                 const data = await response.json();
                 console.log(data);
-                setResponseData(data);  // Assuming data is the fetched data
+                setResponseData(data);
+                setLoading(false); // Set loading to false once data is received
                 navigate('/response');
             }
         } catch (error) {
             console.error('Error fetching the recommendations:', error);
+            setLoading(false); // Set loading to false in case of error
         }
     };
 
@@ -85,6 +90,15 @@ function SearchBar() {
                 <button className="btn btn-outline-secondary" type="button" onClick={handleSearch}>
                     Search
                 </button>
+                {/* Loading indicator */}
+                {loading && (
+                    <div className="loading-indicator">
+                        <div className="spinner-border text-secondary" role="status">
+                            <span className="sr-only"></span>
+                        </div>
+                        <span> Generating recommendations...</span>
+                    </div>
+                )}
             </div>
 
             <SelectedMangaList selectedMangaTitles={selectedMangaTitles} handleRemoveManga={handleRemoveManga} />
