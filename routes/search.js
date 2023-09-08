@@ -8,8 +8,8 @@ const router = express.Router();
 // Basic search route that fetches the first 10 manga from the database
 router.get('/basic', async (req, res, next) => {
     try {
-        let mangas = await Manga.find().limit(10).exec();
-        res.json(mangas);
+        let mangaList = await Manga.find().limit(10).exec();
+        res.json(mangaList);
     } catch (err) {
         next(err);
     }
@@ -19,11 +19,11 @@ router.get('/basic', async (req, res, next) => {
 router.get('/', async (req, res, next) => {
     const searchTerm = req.query.term;
     try {
-        let mangas = await Manga.find({
+        let searchedManga = await Manga.find({
             title: new RegExp(searchTerm, 'i')
         }).limit(10).exec();
 
-        res.json(mangas);
+        res.json(searchedManga);
     } catch (err) {
         next(err);
     }
@@ -38,14 +38,14 @@ router.get('/suggestions', async (req, res, next) => {
         }
 
         const regex = new RegExp(title, 'i'); // Case insensitive regex
-        const mangas = await Manga.find({
+        const regexManga = await Manga.find({
             $or: [
                 { title: { $regex: regex } },
                 { title_english: { $regex: regex } },
             ],
         }).limit(5); // Adjust the limit as needed
 
-        res.status(200).json(mangas);
+        res.status(200).json(regexManga);
     } catch (error) {
         next(error);
     }

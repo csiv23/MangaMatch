@@ -1,12 +1,11 @@
 // Place this in your importManga.js file
 
-const csv = require('csv-parser'); // Make sure to install the 'csv-parser' package
+const csv = require('csv-parser'); 
 const fs = require('fs');
 
-// Replace 'actual/path/to/your/file.csv' with the real path to your CSV file
 const filePath = 'C:\\Users\\Cameron\\OneDrive\\Desktop\\repos\\MangaMatch\\manga.csv';
 
-// Counter variable to limit the number of mangas processed
+// Counter variable to limit the number of manga processed
 let counter = 0;
 
 fs.access(filePath, fs.constants.F_OK, (err) => {
@@ -16,7 +15,7 @@ fs.access(filePath, fs.constants.F_OK, (err) => {
         fs.createReadStream(filePath)
             .pipe(csv())
             .on('data', (row) => {
-                if (counter < 2) { // Limit to the first 2 mangas
+                if (counter < 2) { // Limit to the first 2 manga
                     try {
                         const authors = JSON.parse(row.authors.replace(/'/g, '"'));
                         // Continue with your logic here
