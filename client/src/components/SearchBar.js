@@ -4,18 +4,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function SearchBar() {
     const [query, setQuery] = useState('');
     const [suggestions, setSuggestions] = useState([]);
-    const [selectedMangaId, setSelectedMangaId] = useState(null);
+    const [selectedMangaIds, setSelectedMangaIds] = useState([]);
+    const [selectedMangaTitles, setSelectedMangaTitles] = useState([]);
 
     const handleSearch = async () => {
         try {
-            // Fetch recommendations using the selectedMangaId
-            if (selectedMangaId) { // Ensure a manga has been selected before fetching
+            if (selectedMangaIds.length > 0) {
                 const response = await fetch(`http://localhost:5000/api/recommend/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ mangaIds: [selectedMangaId] }) // Pass the selectedMangaId in the body
+                    body: JSON.stringify({ mangaIds: selectedMangaIds }) 
                 });
                 const data = await response.json();
                 console.log(data);
@@ -35,6 +35,32 @@ function SearchBar() {
         }
     };
 
+    const handleRemoveManga = (index) => {
+        const newSelectedMangaIds = [...selectedMangaIds];
+        newSelectedMangaIds.splice(index, 1);
+        setSelectedMangaIds(newSelectedMangaIds);
+
+        const newSelectedMangaTitles = [...selectedMangaTitles];
+        newSelectedMangaTitles.splice(index, 1);
+        setSelectedMangaTitles(newSelectedMangaTitles);
+    };
+
+    const handleSelectManga = (suggestion) => {
+        const isAlreadySelected = selectedMangaIds.includes(suggestion.manga_id);
+        setSelectedMangaIds(prevSelectedMangaIds =>
+            isAlreadySelected
+                ? prevSelectedMangaIds.filter(id => id !== suggestion.manga_id)
+                : [...prevSelectedMangaIds, suggestion.manga_id]
+        );
+        setSelectedMangaTitles(prevSelectedMangaTitles =>
+            isAlreadySelected
+                ? prevSelectedMangaTitles.filter(title => title !== suggestion.title)
+                : [...prevSelectedMangaTitles, suggestion.title]
+        );
+        setQuery(''); // Clear the search bar after selecting a manga
+        setSuggestions([]); // Clear the suggestions
+    };
+
     return (
         <div className="container mt-3">
             <div className="input-group mb-3">
@@ -44,7 +70,7 @@ function SearchBar() {
                     value={query}
                     onChange={(e) => {
                         setQuery(e.target.value);
-                        fetchSuggestions(e.target.value); // Consider debouncing this call
+                        fetchSuggestions(e.target.value);
                     }}
                     placeholder="Enter manga title..."
                 />
@@ -53,6 +79,19 @@ function SearchBar() {
                 </button>
             </div>
 
+            {/* Display selected manga titles */}
+            {selectedMangaTitles.length > 0 && (
+                <div className="selected-manga-list">
+                    Selected Manga:
+                    {selectedMangaTitles.map((title, index) => (
+                        <span key={index} className="selected-manga-item">
+                            {title}
+                            <button type="button" className="btn-close btn-close-black" aria-label="Close" onClick={() => handleRemoveManga(index)}></button>
+                        </span>
+                    ))}
+                </div>
+            )}
+
             {/* Display suggestions and allow users to select a suggestion */}
             {suggestions.length > 0 && (
                 <div className="list-group">
@@ -60,12 +99,8 @@ function SearchBar() {
                         <button
                             type="button"
                             className="list-group-item list-group-item-action"
-                            key={suggestion.manga_id} // Use manga_id as key
-                            onClick={() => {
-                                setQuery(suggestion.title);
-                                setSelectedMangaId(suggestion.manga_id); // Set manga_id to selectedMangaId
-                                setSuggestions([]);
-                            }}
+                            key={suggestion.manga_id}
+                            onClick={() => handleSelectManga(suggestion)}
                         >
                             {suggestion.title} - {suggestion.info}
                         </button>
