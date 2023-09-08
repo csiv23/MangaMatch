@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react'; // Added useContext here
+import { useNavigate } from 'react-router-dom';
+import { MangaContext } from './MangaContext'; // Adjust path as necessary
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function SearchBar() {
+    const navigate = useNavigate();
+    const { setResponseData } = useContext(MangaContext);
     const [query, setQuery] = useState('');
     const [suggestions, setSuggestions] = useState([]);
     const [selectedMangaIds, setSelectedMangaIds] = useState([]);
@@ -15,10 +19,12 @@ function SearchBar() {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ mangaIds: selectedMangaIds }) 
+                    body: JSON.stringify({ mangaIds: selectedMangaIds })
                 });
                 const data = await response.json();
                 console.log(data);
+                setResponseData(data);  // Assuming data is the fetched data
+                navigate('/response');
             }
         } catch (error) {
             console.error('Error fetching the recommendations:', error);

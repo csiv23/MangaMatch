@@ -1,12 +1,19 @@
 import React from 'react';
-import SearchBar from './components/SearchBar';
+import { MangaProvider } from './components/MangaContext'; 
+import SearchBar from './components/SearchBar'; 
+import ResponseDisplay from './components/ResponseDisplay'; 
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
-    <div>
-      <h1>MangaMatch</h1>
-      <SearchBar />
-    </div>
+    <MangaProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<SearchBar />} />
+          <Route path="response" element={<ResponseDisplay />} />
+        </Routes>
+      </Router>
+    </MangaProvider>
   );
 }
 
