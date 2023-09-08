@@ -11,9 +11,10 @@ function MangaSuggestions({ suggestions, handleSelectManga }) {
                         key={suggestion.manga_id}
                         onClick={() => handleSelectManga(suggestion)}
                     >
-                        {suggestion.title} - {suggestion.info}
+                        {suggestion.title}{suggestion.info ? ` - ${suggestion.info}` : ''}
                     </button>
                 ))}
+
             </div>
         )
     );
