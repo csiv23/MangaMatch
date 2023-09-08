@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'; // Added useContext here
 import { Link } from 'react-router-dom';
-import { MangaContext } from './MangaContext'; // Adjust path as necessary
+import { MangaContext } from '../contexts/MangaContext'; // Adjust path as necessary
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function ResponseDisplay() {

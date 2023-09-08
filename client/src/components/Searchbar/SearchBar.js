@@ -1,7 +1,9 @@
-import React, { useState, useContext } from 'react'; // Added useContext here
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MangaContext } from './MangaContext'; // Adjust path as necessary
+import { MangaContext } from '../../contexts/MangaContext'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import MangaSuggestions from './MangaSuggestions';
+import SelectedMangaList from './SelectedMangaList';
 
 function SearchBar() {
     const navigate = useNavigate();
@@ -85,34 +87,8 @@ function SearchBar() {
                 </button>
             </div>
 
-            {/* Display selected manga titles */}
-            {selectedMangaTitles.length > 0 && (
-                <div className="selected-manga-list">
-                    Selected Manga:
-                    {selectedMangaTitles.map((title, index) => (
-                        <span key={index} className="selected-manga-item">
-                            {title}
-                            <button type="button" className="btn-close btn-close-black" aria-label="Close" onClick={() => handleRemoveManga(index)}></button>
-                        </span>
-                    ))}
-                </div>
-            )}
-
-            {/* Display suggestions and allow users to select a suggestion */}
-            {suggestions.length > 0 && (
-                <div className="list-group">
-                    {suggestions.map((suggestion) => (
-                        <button
-                            type="button"
-                            className="list-group-item list-group-item-action"
-                            key={suggestion.manga_id}
-                            onClick={() => handleSelectManga(suggestion)}
-                        >
-                            {suggestion.title} - {suggestion.info}
-                        </button>
-                    ))}
-                </div>
-            )}
+            <SelectedMangaList selectedMangaTitles={selectedMangaTitles} handleRemoveManga={handleRemoveManga} />
+            <MangaSuggestions suggestions={suggestions} handleSelectManga={handleSelectManga} />
         </div>
     );
 }
