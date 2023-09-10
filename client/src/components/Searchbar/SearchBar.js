@@ -2,8 +2,8 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MangaContext } from '../../contexts/MangaContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import MangaSuggestions from './MangaSuggestions';
-import SelectedMangaList from './SelectedMangaList';
+import MangaSuggestions from '../Suggestions/MangaSuggestions';
+import SelectedMangaList from '../Suggestions/SelectedMangaList';
 
 function SearchBar() {
     const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import React from 'react';
 import { MangaProvider } from './contexts/MangaContext'; 
 import SearchBar from './components/Searchbar/SearchBar'; 
-import ResponseDisplay from './components/ResponseDisplay'; 
+import ResponseDisplay from './components/ResponseDisplay/ResponseDisplay'; 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
