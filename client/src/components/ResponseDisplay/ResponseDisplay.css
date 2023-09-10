@@ -1,0 +1,10 @@
+.manga-image {
+    object-fit: cover;
+    height: 450px; /* Adjust the height to make the cards taller */
+    width: 100%;
+}
+
+.manga-text {
+    min-height: 100px; /* Set a minimum height to prevent compression of titles */
+    overflow-y: auto;
+}

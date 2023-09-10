@@ -1,0 +1,78 @@
+/* SearchBar.css */
+.search-bar {
+    width: 300px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .search-bar input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .search-bar button {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  
+  .search-bar button:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .search-bar ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .search-bar li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .manga-selection-btn {
+    display: block;
+    margin: 0 auto 10px auto;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .manga-selection-btn:hover {
+    background-color: #e2e2e2;
+  }
+  
+  .manga-image {
+    object-fit: cover;
+    width: auto;
+    height: 50px;
+    margin-right: 10px;
+    border-radius: 4px;
+  }
+  
+  .selected-manga-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .list-group-item {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ececec;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    padding: 10px;
+  }
+  
+  .btn-close {
+    margin-left: auto;
+  }
+  
