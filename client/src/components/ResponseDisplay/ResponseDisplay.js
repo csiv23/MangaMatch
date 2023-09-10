@@ -12,6 +12,8 @@ function ResponseDisplay() {
             <div className="d-flex flex-wrap justify-content-around">
                 {responseData.map((manga, index) => (
                     <div className="card m-2" style={{ width: '18rem' }} key={index}>
+                        {/* Adding an img element to display the manga's main picture */}
+                        <img src={manga.main_picture} alt={`${manga.title} cover`} className="card-img-top" />
                         <div className="card-body">
                             <h5 className="card-title">{manga.title}</h5>
                             <h6 className="card-subtitle mb-2 text-muted">{manga.type} - Score: {manga.score}</h6>
@@ -26,3 +28,4 @@ function ResponseDisplay() {
 }
 
 export default ResponseDisplay;
+
