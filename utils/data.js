@@ -97,10 +97,12 @@ const themeList = [
     'Idols (Male)'
 ].sort();
 
+const combinedList = [...genreList, ...themeList, ...demographicsList];
 
 module.exports = {
     genreList,
     themeList,
     demographicsList,
     typeList,
+    combinedList
 };
