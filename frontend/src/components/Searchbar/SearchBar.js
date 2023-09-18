@@ -1,42 +1,20 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { MangaContext } from '../../contexts/MangaContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MangaSuggestions from '../Suggestions/MangaSuggestions';
 import SelectedMangaList from '../Suggestions/SelectedMangaList';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+
 
 function SearchBar() {
-    const navigate = useNavigate();
-    const { setResponseData } = useContext(MangaContext);
+    const {
+        selectedMangaIds, setSelectedMangaIds,
+        selectedMangaTitles, setSelectedMangaTitles
+    } = useContext(MangaContext);
     const [query, setQuery] = useState('');
     const [suggestions, setSuggestions] = useState([]);
-    const [selectedMangaIds, setSelectedMangaIds] = useState([]);
-    const [selectedMangaTitles, setSelectedMangaTitles] = useState([]);
-    const [loading, setLoading] = useState(false); // New state variable for loading
 
-
-    const handleSearch = async () => {
-        try {
-            setLoading(true); // Set loading to true when the search starts
-            if (selectedMangaIds.length > 0) {
-                const response = await fetch(`http://localhost:5000/api/recommend/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ mangaIds: selectedMangaIds })
-                });
-                const data = await response.json();
-                console.log(data);
-                setResponseData(data);
-                setLoading(false); // Set loading to false once data is received
-                navigate('/response');
-            }
-        } catch (error) {
-            console.error('Error fetching the recommendations:', error);
-            setLoading(false); // Set loading to false in case of error
-        }
-    };
+    const navigate = useNavigate(); // Define navigate using useNavigate hook
 
     const fetchSuggestions = async (query) => {
         try {
@@ -59,20 +37,25 @@ function SearchBar() {
     };
 
     const handleSelectManga = (suggestion) => {
-        const isAlreadySelected = selectedMangaIds.includes(suggestion.manga_id);
-        setSelectedMangaIds(prevSelectedMangaIds =>
-            isAlreadySelected
-                ? prevSelectedMangaIds.filter(id => id !== suggestion.manga_id)
-                : [...prevSelectedMangaIds, suggestion.manga_id]
-        );
-        setSelectedMangaTitles(prevSelectedMangaTitles =>
-            isAlreadySelected
-                ? prevSelectedMangaTitles.filter(title => title !== suggestion.title)
-                : [...prevSelectedMangaTitles, suggestion.title]
-        );
-        setQuery(''); // Clear the search bar after selecting a manga
-        setSuggestions([]); // Clear the suggestions
+        if (suggestion && suggestion.manga_id !== undefined && suggestion.title !== undefined) {
+            const isAlreadySelected = selectedMangaIds.includes(suggestion.manga_id);
+            setSelectedMangaIds(prevSelectedMangaIds =>
+                isAlreadySelected
+                    ? prevSelectedMangaIds.filter(id => id !== suggestion.manga_id)
+                    : [...prevSelectedMangaIds, suggestion.manga_id]
+            );
+            setSelectedMangaTitles(prevSelectedMangaTitles =>
+                isAlreadySelected
+                    ? prevSelectedMangaTitles.filter(title => title !== suggestion.title)
+                    : [...prevSelectedMangaTitles, suggestion.title]
+            );
+            setQuery(''); // Clear the search bar after selecting a manga
+            setSuggestions([]); // Clear the suggestions
+        } else {
+            console.error('Suggestion object is missing necessary properties', suggestion);
+        }
     };
+    
 
     return (
         <div className="container mt-3">
@@ -87,22 +70,14 @@ function SearchBar() {
                     }}
                     placeholder="Enter manga title..."
                 />
-                <button className="btn btn-outline-secondary" type="button" onClick={handleSearch}>
-                    Search
-                </button>
-                {/* Loading indicator */}
-                {loading && (
-                    <div className="loading-indicator">
-                        <div className="spinner-border text-secondary" role="status">
-                            <span className="sr-only"></span>
-                        </div>
-                        <span> Generating recommendations...</span>
-                    </div>
-                )}
             </div>
 
             <SelectedMangaList selectedMangaTitles={selectedMangaTitles} handleRemoveManga={handleRemoveManga} />
             <MangaSuggestions suggestions={suggestions} handleSelectManga={handleSelectManga} />
+
+            <button type="button" className="btn btn-primary mt-3" onClick={() => navigate('/recommendation-screen')}>
+                Next
+            </button>
         </div>
     );
 }

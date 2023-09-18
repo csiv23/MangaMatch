@@ -1,6 +1,6 @@
 import React from 'react';
 
-function SelectedMangaList({ selectedMangaTitles, handleRemoveManga }) {
+function SelectedMangaList({ selectedMangaTitles = [], handleRemoveManga }) {
     return (
         selectedMangaTitles.length > 0 && (
             <div className="selected-manga-list mb-3">
