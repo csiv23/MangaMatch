@@ -8,9 +8,10 @@ const WelcomeContainer = styled.div`
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0;
     text-align: center;
-    
+    background: linear-gradient(45deg, #20002c 30%, #0e001f 90%);
+    color: white;
+
     h1 {
         font-size: 2.5rem;
         margin-bottom: 1rem;
@@ -19,6 +20,19 @@ const WelcomeContainer = styled.div`
     p {
         font-size: 1.25rem;
         margin-bottom: 2rem;
+    }
+
+    .btn {
+        font-size: 1rem;
+        padding: 0.5rem 2rem;
+        background-color: #800080;
+        border: none;
+        color: white;
+        border-radius: 4px;
+
+        &:hover {
+            background-color: #993399;
+        }
     }
 
     @media (max-width: 768px) {
@@ -40,10 +54,10 @@ function WelcomeScreen() {
     };
 
     return (
-        <WelcomeContainer className="container-fluid">
+        <WelcomeContainer>
             <h1>Welcome to MangaMatch</h1>
             <p>Find the best manga recommendations tailored for you!</p>
-            <button className="btn btn-primary btn-lg" onClick={handleClick}>Start</button>
+            <button className="btn btn-primary" onClick={handleClick}>Start</button>
         </WelcomeContainer>
     );
 }
