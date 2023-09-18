@@ -1,15 +1,28 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { MangaContext } from '../../contexts/MangaContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ResponseDisplay.css';
 
 function ResponseDisplay() {
-    const { responseData } = useContext(MangaContext);
+    const { responseData, setSelectedManga, setSelectedMangaIds } = useContext(MangaContext);
+
+    const location = useLocation();
+
+
+    const handleBackToSearch = () => {
+        setSelectedManga([]);  // Reset the selected manga to an empty array
+        setSelectedMangaIds([]);  // Reset the selected manga IDs to an empty array
+        location.push('/');
+    };
+
 
     return (
         <div className="container mt-3">
-            <Link to="/" className="btn btn-secondary mb-3">Back to Search</Link>
+            <Link to="/" className="btn btn-secondary mb-3" onClick={handleBackToSearch}>
+                Back to Search
+            </Link>
             <div className="d-flex flex-wrap justify-content-around">
                 {responseData.map((manga, index) => {
                     console.log(`Genres type: ${typeof manga.genres}`, manga.genres);

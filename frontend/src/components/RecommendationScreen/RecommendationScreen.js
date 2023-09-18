@@ -6,12 +6,12 @@ function RecommendationScreen() {
     const navigate = useNavigate();
     const { setResponseData, selectedMangaIds } = useContext(MangaContext);
     const [loading, setLoading] = useState(false);
-    const [hasGenerated, setHasGenerated] = useState(false);
+    const [showNextButton, setShowNextButton] = useState(false);
 
     const handleGenerateRecommendations = async () => {
         try {
-            console.log('Starting recommendation generation...');  // Log the start of the recommendation generation
-            console.log('Selected Manga IDs:', selectedMangaIds);  // Log the manga IDs being sent in the request
+            console.log('Starting recommendation generation...');
+            console.log('Selected Manga IDs:', selectedMangaIds);
             
             setLoading(true);
             if (selectedMangaIds.length > 0) {
@@ -23,22 +23,22 @@ function RecommendationScreen() {
                     body: JSON.stringify({ mangaIds: selectedMangaIds })
                 });
                 const data = await response.json();
-                console.log('Received data:', data);  // Log the data received from the server
+                console.log('Received data:', data);  
                 setResponseData(data);
-                setHasGenerated(true);
+                setLoading(false);
+                setShowNextButton(true);
             } else {
-                console.warn('No manga IDs selected');  // Log a warning if no manga IDs are selected
+                console.warn('No manga IDs selected');
             }
         } catch (error) {
-            console.error('Error fetching the recommendations:', error);  // Log any errors
-        } finally {
+            console.error('Error fetching the recommendations:', error);
             setLoading(false);
         }
     };
 
     useEffect(() => {
         handleGenerateRecommendations();
-    }, []);
+    }, []);  // Empty dependencies array means this effect runs once when component mounts
 
     return (
         <div className="recommendation-screen">
@@ -51,7 +51,7 @@ function RecommendationScreen() {
                     <span> Generating recommendations...</span>
                 </div>
             )}
-            {hasGenerated && !loading && (
+            {showNextButton && !loading && (
                 <button className="btn btn-primary" onClick={() => navigate('/view-recommendations')}>
                     Next
                 </button>
