@@ -55,10 +55,12 @@ function SearchBar() {
             console.error('Suggestion object is missing necessary properties', suggestion);
         }
     };
-    
+
 
     return (
-        <div className="container mt-3">
+        <div className="d-flex flex-column vh-100">
+            <h2 className="text-center mt-4 mb-4">Input manga you want suggestions for</h2>
+
             <div className="input-group mb-3">
                 <input
                     type="text"
@@ -69,17 +71,22 @@ function SearchBar() {
                         fetchSuggestions(e.target.value);
                     }}
                     placeholder="Enter manga title..."
+                    aria-label="Manga title"
                 />
             </div>
 
-            <SelectedMangaList selectedMangaTitles={selectedMangaTitles} handleRemoveManga={handleRemoveManga} />
-            <MangaSuggestions suggestions={suggestions} handleSelectManga={handleSelectManga} />
+            { query && <MangaSuggestions suggestions={suggestions} handleSelectManga={handleSelectManga} /> }
 
-            <button className="btn btn-primary" onClick={() => navigate('/recommendation-screen')}>
-                Next
-            </button>
+            <SelectedMangaList selectedMangaTitles={selectedMangaTitles} handleRemoveManga={handleRemoveManga} />
+            
+            <div className="mt-auto mb-4 text-center">
+                <button className="btn btn-primary" onClick={() => navigate('/recommendation-screen')}>
+                    Next
+                </button>
+            </div>
         </div>
     );
 }
+
 
 export default SearchBar;
