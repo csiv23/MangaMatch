@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MangaContext } from '../../contexts/MangaContext';
 
@@ -6,6 +6,7 @@ function RecommendationScreen() {
     const navigate = useNavigate();
     const { setResponseData, selectedMangaIds } = useContext(MangaContext);
     const [loading, setLoading] = useState(false);
+    const [hasGenerated, setHasGenerated] = useState(false);
 
     const handleGenerateRecommendations = async () => {
         try {
@@ -24,23 +25,24 @@ function RecommendationScreen() {
                 const data = await response.json();
                 console.log('Received data:', data);  // Log the data received from the server
                 setResponseData(data);
-                setLoading(false);
-                navigate('/view-recommendations');
+                setHasGenerated(true);
             } else {
                 console.warn('No manga IDs selected');  // Log a warning if no manga IDs are selected
             }
         } catch (error) {
             console.error('Error fetching the recommendations:', error);  // Log any errors
+        } finally {
             setLoading(false);
         }
     };
 
+    useEffect(() => {
+        handleGenerateRecommendations();
+    }, []);
+
     return (
         <div className="recommendation-screen">
             <h2>Ready to find your next favorite manga?</h2>
-            <button className="btn btn-primary" onClick={handleGenerateRecommendations} disabled={loading}>
-                Generate Recommendations
-            </button>
             {loading && (
                 <div className="loading-indicator">
                     <div className="spinner-border text-secondary" role="status">
@@ -48,6 +50,11 @@ function RecommendationScreen() {
                     </div>
                     <span> Generating recommendations...</span>
                 </div>
+            )}
+            {hasGenerated && !loading && (
+                <button className="btn btn-primary" onClick={() => navigate('/view-recommendations')}>
+                    Next
+                </button>
             )}
         </div>
     );

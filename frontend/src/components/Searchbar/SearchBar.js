@@ -75,7 +75,7 @@ function SearchBar() {
             <SelectedMangaList selectedMangaTitles={selectedMangaTitles} handleRemoveManga={handleRemoveManga} />
             <MangaSuggestions suggestions={suggestions} handleSelectManga={handleSelectManga} />
 
-            <button type="button" className="btn btn-primary mt-3" onClick={() => navigate('/recommendation-screen')}>
+            <button className="btn btn-primary" onClick={() => navigate('/recommendation-screen')}>
                 Next
             </button>
         </div>
