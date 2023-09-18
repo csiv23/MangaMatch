@@ -42,7 +42,6 @@ function RecommendationScreen() {
 
     return (
         <div className="recommendation-screen">
-            <h2>Ready to find your next favorite manga?</h2>
             {loading && (
                 <div className="loading-indicator">
                     <div className="spinner-border text-secondary" role="status">
