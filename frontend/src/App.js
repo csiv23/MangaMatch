@@ -5,11 +5,13 @@ import ResponseDisplay from './components/ResponseDisplay/ResponseDisplay';
 import WelcomeScreen from './components/WelcomeScreen/WelcomeScreen';
 import RecommendationScreen from './components/RecommendationScreen/RecommendationScreen';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import GlobalStyle from './styles/GlobalStyle'; // Import global styles
 
 function App() {
   return (
     <MangaProvider>
       <Router>
+        <GlobalStyle />  {/* Apply global styles */}
         <Routes>
           <Route path="/" element={<WelcomeScreen />} />
           <Route path="select-manga" element={<SearchBar />} />
