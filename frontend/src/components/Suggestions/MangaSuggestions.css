@@ -15,13 +15,25 @@
     text-overflow: ellipsis;
   }
   
-  .suggestion-item {
-    width: 100%; /* Ensure each suggestion takes up the full width available */
+  .manga-suggestions-container {
+    max-height: 50vh; /* This will set the maximum height to 70% of the viewport height */
+    overflow-y: auto;
+    border: 1px solid #ccc; /* Optional: adds a border around the container */
+    border-radius: 5px; /* Optional: rounds the corners of the container */
 }
+
+.suggestion-item {
+    height: 100%; /* This will make each suggestion item take up the full height of the container */
+    display: flex; /* This ensures the content inside the suggestion item is aligned properly */
+    align-items: center; /* This vertically centers the content inside the suggestion item */
+}
+
+
 
 .suggestion-img {
     width: 50px;
     margin-right: 10px;
+    
 }
 
 .suggestion-text {
@@ -29,3 +41,4 @@
     overflow: hidden;
     text-overflow: ellipsis; /* Display ellipsis for overflowing text */
 }
+
