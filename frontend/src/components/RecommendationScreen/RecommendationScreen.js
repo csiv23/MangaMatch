@@ -1,6 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MangaContext } from '../../contexts/MangaContext';
+import './RecommendationScreen.css';
+import { FaArrowRight } from 'react-icons/fa'; // Import the arrow icon
+
+
 
 function RecommendationScreen() {
     const navigate = useNavigate();
@@ -12,7 +16,7 @@ function RecommendationScreen() {
         try {
             console.log('Starting recommendation generation...');
             console.log('Selected Manga IDs:', selectedMangaIds);
-            
+
             setLoading(true);
             if (selectedMangaIds.length > 0) {
                 const response = await fetch(`http://localhost:5000/api/recommend/`, {
@@ -23,7 +27,7 @@ function RecommendationScreen() {
                     body: JSON.stringify({ mangaIds: selectedMangaIds })
                 });
                 const data = await response.json();
-                console.log('Received data:', data);  
+                console.log('Received data:', data);
                 setResponseData(data);
                 setLoading(false);
                 setShowNextButton(true);
@@ -44,15 +48,15 @@ function RecommendationScreen() {
         <div className="recommendation-screen">
             {loading && (
                 <div className="loading-indicator">
+                    <div className="generate-recommendation-text">Generating recommendations...</div>
                     <div className="spinner-border text-secondary" role="status">
-                        <span className="sr-only"></span>
+                        <span className="sr-only">Loading...</span>
                     </div>
-                    <span> Generating recommendations...</span>
                 </div>
             )}
             {showNextButton && !loading && (
-                <button className="btn btn-primary" onClick={() => navigate('/view-recommendations')}>
-                    Next
+                <button className="show-recommendations-btn" onClick={() => navigate('/view-recommendations')}>
+                    Show Recommendations <FaArrowRight className="arrow-icon" />
                 </button>
             )}
         </div>

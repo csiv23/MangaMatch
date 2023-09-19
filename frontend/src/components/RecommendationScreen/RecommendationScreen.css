@@ -1,0 +1,63 @@
+.recommendation-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+}
+
+
+.generate-recommendation-text {
+    font-size: 2rem; /* Adjust as needed for desktop size */
+    text-align: center;
+}
+
+.spinner-border {
+    margin-top: 20px; /* Adjust as needed to give space between the text and the spinner */
+}
+
+@media (max-width: 600px) {
+    .generate-recommendation-text {
+        font-size: 1.5rem; /* Adjust as needed for mobile size */
+    }
+
+    
+}
+
+/* RecommendationScreen.css */
+.show-recommendations-btn {
+    font-size: 2rem;
+    padding: 0.5rem 2rem;
+    background-color: rgba(0, 0, 0, 0.05); /* Slightly darker background for better visibility */
+    border: 2px solid grey; /* Made border slightly thicker */
+    color: grey;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centered the text and icon */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+}
+
+.arrow-icon {
+    margin-left: 10px; /* Give some space between the text and the arrow icon */
+    transition: transform 0.3s ease;
+}
+
+.show-recommendations-btn:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Slightly darker background on hover */
+    border-color: darkgrey; /* Darker border color on hover */
+}
+
+.show-recommendations-btn:hover .arrow-icon {
+    transform: translateX(5px); /* Move the arrow slightly to the right on hover */
+}
