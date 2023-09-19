@@ -15,22 +15,6 @@ const GlobalStyle = createGlobalStyle`
     color: #4B0082; 
   }
 
-  .btn {
-    background-color: #4B0082; 
-    border: none;
-    font-family: 'Roboto', sans-serif;
-    &:hover {
-      background-color: #3a0066;
-    }
-  }
-  
-  .btn-primary {
-    background-color: #4B0082;
-    &:hover {
-      background-color: #3a0066;
-    }
-  }
-
   .container {
     background-color: white; 
     padding: 20px;
