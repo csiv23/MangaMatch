@@ -64,7 +64,7 @@ function SearchBar() {
     return (
         <div className="search-bar">
             <h2 className="text-center">Search Manga You Want Suggestions For:</h2>
-
+    
             <div className="input-group">
                 <input
                     type="text"
@@ -72,24 +72,27 @@ function SearchBar() {
                     value={query}
                     onChange={(e) => {
                         setQuery(e.target.value);
-                        fetchSuggestions(e.target.value);
+                        if (e.target.value) {
+                            fetchSuggestions(e.target.value);
+                        }
                     }}
                     placeholder="Enter manga title..."
                     aria-label="Manga title"
                 />
             </div>
-
-            {suggestions.length > 0 && <MangaSuggestions suggestions={suggestions} handleSelectManga={handleSelectManga} />} {/* Changed the condition to check suggestions array length */}
-
+    
+            {suggestions.length > 0 && <MangaSuggestions suggestions={suggestions} handleSelectManga={handleSelectManga} />}
+    
             <SelectedMangaList selectedMangaTitles={selectedMangaTitles} handleRemoveManga={handleRemoveManga} />
-
-            <div className="text-center">
+    
+            <div className="text-center next-button-container">
                 <button className="next-button" onClick={() => navigate('/recommendation-screen')}>
                     Next
                 </button>
             </div>
         </div>
     );
+    
 
 
 }

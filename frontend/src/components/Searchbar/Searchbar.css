@@ -31,7 +31,8 @@
 
 .list-group-item {
   width: 100%; /* Set a fixed width */
-  max-width: 300px; /* Set a max-width to maintain a uniform width */
+  max-width: 400px; /* Set a max-width to maintain a uniform width */
+  min-width: 300px;
   height: 88px; /* Set a fixed height */
   white-space: nowrap; /* Keeps text in a single line */
   overflow: hidden; /* Hide the overflow text */
@@ -40,22 +41,32 @@
   align-items: center; /* Added to center text vertically */
 }
 
-
+.next-button-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px;
+  background-color: #f9f9f9; /* Optional: adjust the background color to match your color scheme */
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1); /* Optional: adding a subtle shadow for a better look */
+}
 
 .next-button {
-  padding: 10px 20px;
-  border: none;
-  background-color: #6200ea;
-  color: #fff;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Make the button take the full width of its container */
+  border: none; /* Remove border */
+  padding: 15px; /* Add padding for a larger, more clickable area */
+  font-size: 1em; /* Adjust font size */
+  color: #fff; /* Adjust font color */
+  background-color: #0d6efd; /* Adjust background color to match your color scheme */
+  border-radius: 8px; /* Optional: add border-radius for rounded corners */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  transition: background-color 0.3s; /* Optional: add transition for a smooth color change on hover */
 }
 
 .next-button:hover {
-  background-color: #3700b3;
+  background-color: #0056b3; /* Optional: change background color on hover for a visual feedback */
 }
+
 
 @media (max-width: 768px) {
   .input-group {
