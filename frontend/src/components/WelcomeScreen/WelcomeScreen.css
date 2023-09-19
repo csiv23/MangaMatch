@@ -11,6 +11,19 @@
     color: white;
 }
 
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Roboto';
+  }
+  
+  #root {
+    height: 100%;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
 @keyframes Gradient {
     0% {
         background-position: 0% 50%;

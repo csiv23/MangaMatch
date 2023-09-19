@@ -1,4 +1,5 @@
 import React from 'react';
+import './SelectedMangaList.css'; // Importing a new CSS file to style this component
 
 function SelectedMangaList({ selectedMangaTitles = [], handleRemoveManga }) {
     return (
@@ -7,13 +8,7 @@ function SelectedMangaList({ selectedMangaTitles = [], handleRemoveManga }) {
                 {selectedMangaTitles.map((title, index) => (
                     <div 
                         key={index} 
-                        className="d-flex justify-content-between align-items-center px-2 py-1"
-                        style={{ 
-                            background: '#f0f0f0', 
-                            borderRadius: '12px', 
-                            maxWidth: '48%', 
-                            fontSize: '0.9em' 
-                        }}
+                        className="selected-manga-item" // Added a new class for styling
                     >
                         <span className="text-truncate" style={{ maxWidth: '80%' }}>{title}</span>
                         <button 

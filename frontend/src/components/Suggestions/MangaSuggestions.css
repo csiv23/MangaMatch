@@ -1,0 +1,31 @@
+.suggestion-item {
+    width: 100%;
+    max-width: 300px;
+    height: 50px;
+  }
+  
+  .suggestion-img {
+    width: 50px;
+    margin-right: 10px;
+  }
+  
+  .suggestion-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .suggestion-item {
+    width: 100%; /* Ensure each suggestion takes up the full width available */
+}
+
+.suggestion-img {
+    width: 50px;
+    margin-right: 10px;
+}
+
+.suggestion-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Display ellipsis for overflowing text */
+}

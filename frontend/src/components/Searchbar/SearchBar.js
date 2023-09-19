@@ -1,8 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { MangaContext } from '../../contexts/MangaContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MangaSuggestions from '../Suggestions/MangaSuggestions';
 import SelectedMangaList from '../Suggestions/SelectedMangaList';
+import './Searchbar.css';
 import { useNavigate } from 'react-router-dom';
 
 function SearchBar() {
@@ -55,11 +56,16 @@ function SearchBar() {
         }
     };
 
-    return (
-        <div className="d-flex flex-column vh-100 justify-content-center">
-            <h2 className="text-center mt-2 mb-4">Insert manga you want suggestions for</h2>
+    useEffect(() => {
+        fetchSuggestions('a'); // Fetch suggestions with an empty query string on component mount
+    }, []); // Empty dependency array to ensure it runs only once on mount
 
-            <div className="input-group mb-3 mx-auto" style={{ maxWidth: '500px' }}>
+
+    return (
+        <div className="search-bar">
+            <h2 className="text-center">Search Manga You Want Suggestions For:</h2>
+
+            <div className="input-group">
                 <input
                     type="text"
                     className="form-control"
@@ -73,17 +79,19 @@ function SearchBar() {
                 />
             </div>
 
-            { query && <MangaSuggestions suggestions={suggestions} handleSelectManga={handleSelectManga} /> }
+            {suggestions.length > 0 && <MangaSuggestions suggestions={suggestions} handleSelectManga={handleSelectManga} />} {/* Changed the condition to check suggestions array length */}
 
             <SelectedMangaList selectedMangaTitles={selectedMangaTitles} handleRemoveManga={handleRemoveManga} />
-            
-            <div className="mt-auto mb-4 text-center">
-                <button className="btn btn-primary" onClick={() => navigate('/recommendation-screen')}>
+
+            <div className="text-center">
+                <button className="next-button" onClick={() => navigate('/recommendation-screen')}>
                     Next
                 </button>
             </div>
         </div>
     );
+
+
 }
 
 
