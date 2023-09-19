@@ -19,7 +19,7 @@ function WelcomeScreen() {
                 </div>
             </div>
             <p>Find the best manga recommendations tailored for you!</p>
-            <button className="btn btn-primary" onClick={handleClick}>Start</button>
+            <button className="welcome-btn" onClick={handleClick}>Start</button>
         </div>
     );
 }
