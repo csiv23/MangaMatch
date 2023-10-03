@@ -120,7 +120,7 @@ function computeAverageVector(targetVectors) {
 }
 
 // Find N most similar items to a target vector
-function findTopNSimilar(targetVector, vectors, title, N = 5) {
+function findTopNSimilar(targetVector, vectors, title, N = 10) {
     // Map each vector to its item and similarity score
     const mappedVectors = vectors.map(vec => {
         return { item: vec.item, similarity: cosineSimilarity(targetVector, vec.vector), vector: vec.vector };
