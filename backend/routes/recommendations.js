@@ -18,10 +18,11 @@ const { genreList, themeList, demographicsList, combinedList } = require('../uti
  * @param {Array} vectors - The vectors to compare against the target vector.
  * @returns {Array} Top similar mangas.
  */
-async function processVectors(targetVector, vectors) {
-    const topMangas = findTopNSimilar(targetVector, vectors);
+async function processVectors(targetVector, vectors, targetMembers) {  // Include targetMembers as a parameter
+    const topMangas = findTopNSimilar(targetVector, vectors, "", targetMembers);  // Pass targetMembers here
     return topMangas;
 }
+
 
 router.post('/', async (req, res) => {
     try {
@@ -44,12 +45,15 @@ router.post('/', async (req, res) => {
         // Compute the average vector for target mangas
         const avgVector = computeAverageVector(targetVectors);
 
+        // Compute the average number of members for target mangas
+        const avgMembers = targetMangas.reduce((acc, manga) => acc + manga.members, 0) / targetMangas.length;
+
         // Filter vectors based on the user's library and other criteria
         const filteredVectors = filterMangaVectors(targetVectors, allVectors, combinedList, targetTitles, mangaIds);
 
         // Perform non-batch processing for comparison
         console.time("Non-Batch Processing Time");  // Start timing for non-batch processing
-        const topMangas = await processVectors(avgVector, filteredVectors);
+        const topMangas = await processVectors(avgVector, filteredVectors, avgMembers);
         console.timeEnd("Non-Batch Processing Time");  // End timing for non-batch processing
 
         // Sort the top mangas based on their scores and limit to top 10

@@ -1,6 +1,8 @@
 // Importing required modules and data
 const { safeParseJSON } = require('./jsonHelper');
 const { genreList, themeList, demographicsList, combinedList } = require('../utils/data.js');
+const moment = require('moment'); // You'll need to install the moment.js library
+
 
 // Memoization cache for vectors
 const vectorMemo = new Map();
@@ -95,6 +97,28 @@ function cosineSimilarity(vecA, vecB) {
 }
 
 /**
+ * Computes the cosine similarity between two vectors and applies a penalty based on the difference
+ * in the number of members for both mangas.
+ * 
+ * @param {number[]} vecA - The first vector.
+ * @param {number[]} vecB - The second vector.
+ * @param {number} membersA - Number of members for the first manga.
+ * @param {number} membersB - Number of members for the second manga.
+ * @returns {number} - The cosine similarity between vecA and vecB.
+ */
+function cosineSimilarityWithMembers(vecA, vecB, membersA, membersB) {
+    let similarity = cosineSimilarity(vecA, vecB);
+
+    // Penalize similarity based on the member count difference
+    const memberDiff = Math.abs(membersA - membersB);
+
+    // Apply the penalty to the similarity score; adjust the multiplier as needed
+    similarity = similarity - (memberDiff * 0.0000006); 
+
+    return similarity;
+}
+
+/**
  * Computes the average vector from a list of target vectors. If any of the target vectors have the 'Kids' genre,
  * the average vector will also have the 'Kids' genre set to 1, alongside other genres found in the target vectors.
  * 
@@ -119,11 +143,16 @@ function computeAverageVector(targetVectors) {
     return avgVector;
 }
 
-// Find N most similar items to a target vector
-function findTopNSimilar(targetVector, vectors, title, N = 10) {
+// Find N most similar items to a target vector considering member count
+function findTopNSimilar(targetVector, vectors, title, targetMembers, N = 10) {
     // Map each vector to its item and similarity score
     const mappedVectors = vectors.map(vec => {
-        return { item: vec.item, similarity: cosineSimilarity(targetVector, vec.vector), vector: vec.vector };
+        return {
+            item: vec.item,
+            // Pass the member count for each manga to the cosineSimilarityWithMembers function
+            similarity: cosineSimilarityWithMembers(targetVector, vec.vector, targetMembers, vec.item.members),
+            vector: vec.vector
+        };
     });
 
     // Filter out vectors with zero similarity score
@@ -134,6 +163,7 @@ function findTopNSimilar(targetVector, vectors, title, N = 10) {
 
     return topNSimilar;
 }
+
 
 // Find common attributes between vectors and a vector to compare
 function findCommonItems(vectors, vecToCompare) {
