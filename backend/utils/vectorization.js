@@ -103,9 +103,9 @@ function findTopNSimilar(targetVector, vectors, title, N = 5) {
 
     const topNSimilar = mappedVectors.sort((a, b) => b.similarity - a.similarity).slice(0, N);
 
-    if (title === 'Youkai Watch') {
+    if (title === 'Hunter x Hunter') {
         topNSimilar.forEach((manga, index) => {
-            console.log(`[Find Top N Similar - Youkai Watch] Rank: ${index + 1}, Manga ID: ${manga.item.manga_id}, Title: ${manga.item.title}, Cosine Similarity: ${manga.similarity.toFixed(4)}`);
+            console.log(`[Find Top N Similar - HxH] Rank: ${index + 1}, Manga ID: ${manga.item.manga_id}, Title: ${manga.item.title}, Cosine Similarity: ${manga.similarity.toFixed(4)}`);
         });
     }
 

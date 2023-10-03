@@ -41,15 +41,16 @@ router.post('/', async (req, res) => {
             topMangas = topMangas.concat(batchResult);
         }
 
-        topMangas.sort((a, b) => b.similarity - a.similarity);
+        topMangas.sort((a, b) => b.item.score - a.item.score);
         topMangas = topMangas.slice(0, 10);
 
         console.log(
-            "Top 10 mangas and their cosine similarities:",
+            "Top 10 mangas and their scores:",
             JSON.stringify(
                 topMangas.map(m => ({
                     mangaId: m.item.manga_id,
                     title: m.item.title,
+                    score: m.item.score,
                     similarity: m.similarity,
                     commonItems: findCommonItems(targetVectors, m.vector)
                 })),
@@ -67,4 +68,3 @@ router.post('/', async (req, res) => {
 
 module.exports = router;
 
-module.exports = router;
