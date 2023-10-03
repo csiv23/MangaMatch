@@ -1,40 +1,38 @@
+// Importing required modules and data
 const { safeParseJSON } = require('./jsonHelper');
 const { genreList, themeList, demographicsList, combinedList } = require('../utils/data.js');
 
+// Memoization cache for vectors
 const vectorMemo = new Map();
 
+/**
+ * Convert a manga object to a vector
+ * @param {Object} manga - Manga data object
+ * @returns {number[]} - Vector representation of the manga's attributes
+ */
 function mangaToVector(manga) {
+    // Parsing manga attributes
     const genres = safeParseJSON(manga.genres[0], []);
     const themes = safeParseJSON(manga.themes[0], []);
     const demographics = safeParseJSON(manga.demographics[0], []);
 
-
-    // Debug logs to understand what is parsed
-    if (manga.title === 'Berserk' || manga.title === 'Youkai Watch') {
-        console.log(`Parsed demographics for ${manga.title}:`, demographics);
-    }
-
+    // Combining all attributes
     const allAttributes = [...genres, ...themes, ...demographics];
-
-    // Check memoization cache
     const attributesKey = allAttributes.sort().join(',');
+
+    // Check if vector is already memoized, if so return the cached vector
     if (vectorMemo.has(attributesKey)) {
         return vectorMemo.get(attributesKey);
     }
 
+    // Creating and storing the vector
     const vector = combinedList.map(item => allAttributes.includes(item) ? 1 : 0);
 
+    // Cache the calculated vector for future use
     vectorMemo.set(attributesKey, vector);
-
-    // Debugging log for specific titles
-    if (manga.title === 'Youkai Watch' || manga.title === 'Berserk') {
-        console.log(`[Debug] ${manga.title}'s Vector: ${vector.join(',')}`);
-        debugVectorToAttributes(`[Debug] ${manga.title}'s Vector: ${vector.join(',')}`, combinedList);
-    }
 
     return vector;
 }
-
 
 /**
  * Convert a debug vector string to a list of attributes and log them.
@@ -96,10 +94,6 @@ function cosineSimilarity(vecA, vecB) {
     return Number.isNaN(similarity) ? 0 : similarity.toFixed(2);
 }
 
-
-
-
-
 /**
  * Computes the average vector from a list of target vectors. If any of the target vectors have the 'Kids' genre,
  * the average vector will also have the 'Kids' genre set to 1, alongside other genres found in the target vectors.
@@ -109,8 +103,6 @@ function cosineSimilarity(vecA, vecB) {
  */
 function computeAverageVector(targetVectors) {
     const avgVector = [];
-    // const kidsIndex = 48;  // Find the index representing the 'Kids' demographic in our attribute list
-    // const hasKidsDemographic = targetVectors.some(vector => vector[kidsIndex] === 1);
 
     for (let i = 0; i < targetVectors[0].length; i++) {
         let sum = 0;
@@ -124,41 +116,49 @@ function computeAverageVector(targetVectors) {
         avgVector[i] = avgVector[i] > 0 ? 1 : 0;
     }
 
-    // if (hasKidsDemographic) {
-    //     avgVector[kidsIndex] = 1;  // If any target vector has the 'Kids' attribute, set it to 1 in the avgVector
-    // }
-
     return avgVector;
 }
 
+// Find N most similar items to a target vector
 function findTopNSimilar(targetVector, vectors, title, N = 5) {
+    // Map each vector to its item and similarity score
     const mappedVectors = vectors.map(vec => {
         return { item: vec.item, similarity: cosineSimilarity(targetVector, vec.vector), vector: vec.vector };
     });
 
-    // Filter out vectors with 0 similarity
+    // Filter out vectors with zero similarity score
     const filteredVectors = mappedVectors.filter(vec => vec.similarity > 0);
 
+    // Sort vectors by similarity score and get the top N
     const topNSimilar = filteredVectors.sort((a, b) => b.similarity - a.similarity).slice(0, N);
 
     return topNSimilar;
 }
 
+// Find common attributes between vectors and a vector to compare
 function findCommonItems(vectors, vecToCompare) {
+    // Object to store the count of each common attribute
     let commonItemCounts = {};
 
+    // Loop through each element in the vector to compare
     for (let i = 0; i < vecToCompare.length; i++) {
+        // If the attribute is present (vecToCompare[i] === 1) and defined in combinedList
         if (vecToCompare[i] === 1 && typeof combinedList[i] !== 'undefined') {
+            // Loop through each vector in the vectors array
             for (let vec of vectors) {
+                // If the attribute is also present in the current vector
                 if (vec[i] === 1) {
+                    // Increment the count for this attribute
                     commonItemCounts[combinedList[i]] = (commonItemCounts[combinedList[i]] || 0) + 1;
                 }
             }
         }
     }
 
+    // Sort attributes by their counts in descending order
     const sortedKeys = Object.keys(commonItemCounts).sort((a, b) => commonItemCounts[b] - commonItemCounts[a]);
 
+    // Create an object with sorted common attributes
     const sortedCommonItems = {};
     for (const key of sortedKeys) {
         sortedCommonItems[key] = commonItemCounts[key];
@@ -167,11 +167,19 @@ function findCommonItems(vectors, vecToCompare) {
     return sortedCommonItems;
 }
 
+
+/**
+ * Filters out vectors from allVectors that are already present in the user's library or in the target list.
+ *
+ * @param {Array} targetVectors - The vectors associated with the user's library.
+ * @param {Array} allVectors - All available manga vectors.
+ * @param {Array} combinedList - A combined list of all items.
+ * @param {Array} targetTitles - Titles that the user already has in their library.
+ * @param {Array} mangaIds - The manga IDs that the user already has in their library.
+ * @returns {Array} An array of unique series vectors.
+ */
 function filterMangaVectors(targetVectors, allVectors, combinedList, targetTitles, mangaIds) {
-    const kidsIndex = 48;
-
-    //const hasKidsDemographic = targetVectors.some(vector => vector[kidsIndex] === 1);
-
+    // Filter out vectors that are already in the user's library or match the target titles
     let filteredVectors = allVectors.filter(vec => {
         const lowerCaseVecTitle = vec.item.title.toLowerCase();
 
@@ -184,6 +192,7 @@ function filterMangaVectors(targetVectors, allVectors, combinedList, targetTitle
             });
     });
 
+    // Function to get the base title of a manga (removes any subtitles)
     const getBaseTitle = (title) => {
         const separators = [':', '-'];
         let baseTitle = title;
@@ -195,6 +204,7 @@ function filterMangaVectors(targetVectors, allVectors, combinedList, targetTitle
         return baseTitle.toLowerCase();
     };
 
+    // Keep only unique series in the filtered list (based on base title)
     let uniqueSeriesVectors = [];
     const uniqueSeriesTitles = new Set();
     filteredVectors.forEach(vec => {
@@ -207,6 +217,7 @@ function filterMangaVectors(targetVectors, allVectors, combinedList, targetTitle
 
     return uniqueSeriesVectors;
 }
+
 
 module.exports = {
     mangaToVector,
