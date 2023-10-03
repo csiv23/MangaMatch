@@ -6,26 +6,60 @@ const vectorMemo = new Map();
 function mangaToVector(manga) {
     const genres = safeParseJSON(manga.genres[0], []);
     const themes = safeParseJSON(manga.themes[0], []);
-    const demographics = manga.demographics;
+    const demographics = safeParseJSON(manga.demographics[0], []);
+
+
+    // Debug logs to understand what is parsed
+    if (manga.title === 'Berserk' || manga.title === 'Youkai Watch') {
+        console.log(`Parsed demographics for ${manga.title}:`, demographics);
+    }
 
     const allAttributes = [...genres, ...themes, ...demographics];
 
+    // Check memoization cache
     const attributesKey = allAttributes.sort().join(',');
-
     if (vectorMemo.has(attributesKey)) {
         return vectorMemo.get(attributesKey);
     }
 
-    let vector = [];
-
-    for (const item of combinedList) {
-        vector.push(allAttributes.includes(item) ? 1 : 0);
-    }
+    const vector = combinedList.map(item => allAttributes.includes(item) ? 1 : 0);
 
     vectorMemo.set(attributesKey, vector);
 
+    // Debugging log for specific titles
+    if (manga.title === 'Youkai Watch' || manga.title === 'Berserk') {
+        console.log(`[Debug] ${manga.title}'s Vector: ${vector.join(',')}`);
+        debugVectorToAttributes(`[Debug] ${manga.title}'s Vector: ${vector.join(',')}`, combinedList);
+    }
+
     return vector;
 }
+
+
+/**
+ * Convert a debug vector string to a list of attributes and log them.
+ * @param {string} debugString - Debug string containing a vector.
+ * @param {Array<string>} attributeList - Sorted list of all possible attributes.
+ */
+const debugVectorToAttributes = (debugString, attributeList) => {
+    // Extract the vector from the debug string
+    const vectorString = debugString.split(':')[1].trim();
+    const vector = vectorString.split(',').map(Number);
+
+    // Initialize an empty array to store the attributes
+    const attributes = [];
+
+    // Loop through the vector and attribute list
+    for (let i = 0; i < vector.length; i++) {
+        if (vector[i] === 1) {
+            // If the value at the index i of vector is 1, add the corresponding attribute
+            attributes.push(attributeList[i]);
+        }
+    }
+
+    // Log the attributes
+    console.log(`Attributes for ${debugString.split(' ')[1]}: ${attributes}`);
+};
 
 /**
  * Computes cosine similarity between two vectors. If one vector has 'Kids' attribute and the other does not,
@@ -37,10 +71,12 @@ function mangaToVector(manga) {
  * @returns {number} - The cosine similarity between vecA and vecB.
  */
 function cosineSimilarity(vecA, vecB) {
-    const kidsIndex = combinedList.indexOf('Kids');  // Find the index representing the 'Kids' demographic in our attribute list
 
-    // If one vector has 'Kids' attribute and the other does not, return 0.00 to prevent recommendation
-    if ((vecA[kidsIndex] === 1 && vecB[kidsIndex] === 0) || (vecA[kidsIndex] === 0 && vecB[kidsIndex] === 1)) {
+    const kidsIndex = 74;  // Index representing the 'Kids' demographic
+
+    // If one vector has 'Kids' and the other does not, return 0.00
+    if ((vecA[kidsIndex] === 1 && vecB[kidsIndex] === 0) ||
+        (vecA[kidsIndex] === 0 && vecB[kidsIndex] === 1)) {
         return 0.00;
     }
 
@@ -50,15 +86,14 @@ function cosineSimilarity(vecA, vecB) {
 
     for (let i = 0; i < vecA.length; i++) {
         dotProduct += vecA[i] * vecB[i];
-        normA += vecA[i] ** 2;
-        normB += vecB[i] ** 2;
+        normA += Math.pow(vecA[i], 2);
+        normB += Math.pow(vecB[i], 2);
     }
 
-    if (normA === 0 || normB === 0) {
-        return 0.00;
-    }
+    // Calculate cosine similarity
+    const similarity = dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 
-    return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+    return Number.isNaN(similarity) ? 0 : similarity.toFixed(2);
 }
 
 
@@ -74,8 +109,8 @@ function cosineSimilarity(vecA, vecB) {
  */
 function computeAverageVector(targetVectors) {
     const avgVector = [];
-    const kidsIndex = 48;  // Find the index representing the 'Kids' demographic in our attribute list
-    const hasKidsDemographic = targetVectors.some(vector => vector[kidsIndex] === 1);
+    // const kidsIndex = 48;  // Find the index representing the 'Kids' demographic in our attribute list
+    // const hasKidsDemographic = targetVectors.some(vector => vector[kidsIndex] === 1);
 
     for (let i = 0; i < targetVectors[0].length; i++) {
         let sum = 0;
@@ -89,9 +124,9 @@ function computeAverageVector(targetVectors) {
         avgVector[i] = avgVector[i] > 0 ? 1 : 0;
     }
 
-    if (hasKidsDemographic) {
-        avgVector[kidsIndex] = 1;  // If any target vector has the 'Kids' attribute, set it to 1 in the avgVector
-    }
+    // if (hasKidsDemographic) {
+    //     avgVector[kidsIndex] = 1;  // If any target vector has the 'Kids' attribute, set it to 1 in the avgVector
+    // }
 
     return avgVector;
 }
@@ -101,13 +136,10 @@ function findTopNSimilar(targetVector, vectors, title, N = 5) {
         return { item: vec.item, similarity: cosineSimilarity(targetVector, vec.vector), vector: vec.vector };
     });
 
-    const topNSimilar = mappedVectors.sort((a, b) => b.similarity - a.similarity).slice(0, N);
+    // Filter out vectors with 0 similarity
+    const filteredVectors = mappedVectors.filter(vec => vec.similarity > 0);
 
-    if (title === 'Hunter x Hunter') {
-        topNSimilar.forEach((manga, index) => {
-            console.log(`[Find Top N Similar - HxH] Rank: ${index + 1}, Manga ID: ${manga.item.manga_id}, Title: ${manga.item.title}, Cosine Similarity: ${manga.similarity.toFixed(4)}`);
-        });
-    }
+    const topNSimilar = filteredVectors.sort((a, b) => b.similarity - a.similarity).slice(0, N);
 
     return topNSimilar;
 }
@@ -137,9 +169,8 @@ function findCommonItems(vectors, vecToCompare) {
 
 function filterMangaVectors(targetVectors, allVectors, combinedList, targetTitles, mangaIds) {
     const kidsIndex = 48;
-    
-    const hasKidsDemographic = targetVectors.some(vector => vector[kidsIndex] === 1);
-    
+
+    //const hasKidsDemographic = targetVectors.some(vector => vector[kidsIndex] === 1);
 
     let filteredVectors = allVectors.filter(vec => {
         const lowerCaseVecTitle = vec.item.title.toLowerCase();
@@ -173,22 +204,6 @@ function filterMangaVectors(targetVectors, allVectors, combinedList, targetTitle
             uniqueSeriesTitles.add(baseTitle);
         }
     });
-
-    if (hasKidsDemographic) {
-        uniqueSeriesVectors = uniqueSeriesVectors.filter(vec => {
-            const isInKidsDemographic = JSON.stringify(vec.item.demographics).includes('Kids');
-
-            return isInKidsDemographic;
-        });
-    } else {
-        uniqueSeriesVectors = uniqueSeriesVectors.filter(vec => {
-            const isNotInKidsDemographic = !JSON.stringify(vec.item.demographics).includes('Kids');
-
-            return isNotInKidsDemographic;
-        });
-    }
-
-
 
     return uniqueSeriesVectors;
 }
