@@ -39,6 +39,8 @@
     max-width: calc(100% - 60px); /* 100% - image width (50px) - image margin-right (10px) */
 }
 
+
+
 .manga-suggestions-container .list-group-item.suggestion-item {
   width: 100%; /* Ensuring item takes full width of the container */
   border: 1px solid #ccc;

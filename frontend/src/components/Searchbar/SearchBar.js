@@ -18,7 +18,7 @@ function SearchBar() {
 
     const fetchSuggestions = async (query) => {
         try {
-            const response = await fetch(`/api/search/suggestions?title=${query}`);
+            const response = await fetch(`/api/search/suggestions?title=${query}&limit=6`);  
             const data = await response.json();
             setSuggestions(data);
         } catch (error) {
