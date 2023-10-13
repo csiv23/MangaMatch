@@ -18,7 +18,7 @@ function SearchBar() {
 
     const fetchSuggestions = async (query) => {
         try {
-            const response = await fetch(`/api/search/suggestions?title=${query}&limit=6`);  
+            const response = await fetch(`/api/search/suggestions?title=${query}&limit=6`);
             const data = await response.json();
             setSuggestions(data);
         } catch (error) {
@@ -81,11 +81,15 @@ function SearchBar() {
                 />
             </div>
 
-            <div className="suggestions-and-selections-container">
-                {suggestions.length > 0 && <MangaSuggestions suggestions={suggestions} handleSelectManga={handleSelectManga} />}
-                <SelectedMangaList selectedMangaTitles={selectedMangaTitles} handleRemoveManga={handleRemoveManga} />
+            <div className="suggestionsAndSelectionsWrapper">  
+                <div className="suggestions-container">
+                    {suggestions.length > 0 && <MangaSuggestions suggestions={suggestions} handleSelectManga={handleSelectManga} />}
+                </div>
+                <div className="selections-container">
+                    <SelectedMangaList selectedMangaTitles={selectedMangaTitles} handleRemoveManga={handleRemoveManga} />
+                </div>
             </div>
-            
+
             <div className="text-center next-button-container">
                 <button className="next-button" onClick={() => navigate('/recommendation-screen')}>
                     Next

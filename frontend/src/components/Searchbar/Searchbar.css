@@ -21,10 +21,12 @@
   margin-top: 2vh; /* Moved the search bar up a bit */
 }
 
-.suggestions-and-selections-container {
+.suggestionsAndSelectionsWrapper {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
+
 
 
 .form-control {
