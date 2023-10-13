@@ -1,12 +1,3 @@
-/* Define the jumping animation */
-@keyframes jump {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-20px);
-    }
-}
 
 .welcome-container {
     display: flex;
@@ -53,6 +44,11 @@ body, html {
     margin-bottom: 1rem;
 }
 
+/* Make the title slide in from the left */
+.header h1 {
+    animation: slideInFromLeft 1s ease-out forwards;
+}
+
 .logo {
     font-size: 4rem;
     display: flex;
@@ -62,12 +58,11 @@ body, html {
 .logo .fa-book {
     font-size: 4rem;
     color: white;
+    animation: slideInFromRight 1s ease-out;
+
 }
 
-/* Add hover effect to the book icon */
-.logo .fa-book:hover {
-    animation: jump 0.5s ease-in-out;
-}
+
 
 h1 {
     font-size: 2.5rem;
@@ -89,12 +84,6 @@ p {
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.welcome-btn:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-color: white;
-}
-
-
 @media (max-width: 768px) {
     .logo {
         font-size: 3rem;
@@ -108,3 +97,35 @@ p {
         font-size: 1rem;
     }
 }
+
+
+
+/* Change opacity of the button when hovered */
+.welcome-btn:hover {
+    opacity: 0.9;
+}
+
+/* Define slide-in animations */
+@keyframes slideInFromLeft {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInFromRight {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+
