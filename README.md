@@ -6,14 +6,11 @@ MangaMatch is an recommendation engine aiming to help manga enthusiasts discover
 
 - **Multi-Manga Input**: Allows users to input multiple manga titles they've enjoyed to generate more nuanced recommendations.
 - **Advanced Recommendation Algorithm**: Leverages one-hot encoding for streamlined genre categorization, and applies cosine similarity metrics for accurate manga-to-manga comparisons across multiple atributes like genres and themes.
-- **Selective Exploration**: Introduces an element of randomness to occasionally suggest lesser-known manga or titles that slightly diverge from the user's typical preferences.
-- **Optimal Batch Processing**: Employs a dynamic batch size to expedite the computation of similar manga, fine-tuning the recommendation engine's performance.
-
 
 
 ## Tech Stack
 
-- **Frontend**: React (To be implemented)
+- **Frontend**: React 
 - **Backend**: Express.js on Node.js
 - **Database**: MongoDB
 - **State Management**: Redux (planned for future updates)
