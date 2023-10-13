@@ -15,7 +15,6 @@
     width: 100%;
 }
 
-
 .generate-recommendation-text {
     font-size: 2rem; /* Adjust as needed for desktop size */
     text-align: center;
@@ -33,30 +32,30 @@
     
 }
 
-/* RecommendationScreen.css */
 .show-recommendations-btn {
-    font-size: 2rem;
+    font-size: 1.5rem;
     padding: 0.5rem 2rem;
-    background-color: rgba(0, 0, 0, 0.05); /* Slightly darker background for better visibility */
-    border: 2px solid grey; /* Made border slightly thicker */
-    color: grey;
-    border-radius: 4px;
+    background-color: #007bff;  
+    border: none;
+    color: #fff;  /* White text color */
+    border-radius: 8px;
     display: flex;
     align-items: center;
-    justify-content: center; /* Centered the text and icon */
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+    justify-content: center;
     cursor: pointer;
-}
+    transition: background-color 0.3s ease;
+  }
 
-.arrow-icon {
-    margin-left: 10px; /* Give some space between the text and the arrow icon */
+
+  .arrow-icon {
+    margin-left: 10px;
     transition: transform 0.3s ease;
-}
+    color: #fff; /* White color for the arrow icon */
+  }
 
-.show-recommendations-btn:hover {
-    background-color: rgba(0, 0, 0, 0.1); /* Slightly darker background on hover */
-    border-color: darkgrey; /* Darker border color on hover */
-}
+  .show-recommendations-btn:hover {
+    background-color: #0056b3;  /* Slightly darker blue on hover */
+  }
 
 .show-recommendations-btn:hover .arrow-icon {
     transform: translateX(5px); /* Move the arrow slightly to the right on hover */
