@@ -32,7 +32,7 @@ router.get('/', async (req, res, next) => {
 // Suggestions route that fetches partial matches for a given title
 router.get('/suggestions', async (req, res, next) => {
     try {
-        const { title } = req.query;
+        const { title, limit = 10 } = req.query;  // Add limit and set a default value
         if (!title) {
             return res.status(200).json([]); // Return an empty array if title is not provided
         }
@@ -43,7 +43,7 @@ router.get('/suggestions', async (req, res, next) => {
                 { title: { $regex: regex } },
                 { title_english: { $regex: regex } },
             ],
-        }).limit(5); // Adjust the limit as needed
+        }).limit(parseInt(limit, 10)); // Use parsed limit value here
 
         res.status(200).json(regexManga);
     } catch (error) {
