@@ -1,6 +1,6 @@
 .suggestion-item {
     width: 100%;
-    max-width: 300px;
+    max-width: 80vw;
     height: 50px;
   }
   
@@ -13,22 +13,18 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: 85%; /* Adjust as necessary */
   }
-  
-  .manga-suggestions-container {
-    max-height: 50vh; /* This will set the maximum height to 70% of the viewport height */
-    overflow-y: auto;
-    border: 1px solid #ccc; /* Optional: adds a border around the container */
-    border-radius: 5px; /* Optional: rounds the corners of the container */
-}
+
 
 .suggestion-item {
     height: 100%; /* This will make each suggestion item take up the full height of the container */
     display: flex; /* This ensures the content inside the suggestion item is aligned properly */
     align-items: center; /* This vertically centers the content inside the suggestion item */
+    width: 100%;
+    max-width: 80vw;
+
 }
-
-
 
 .suggestion-img {
     width: 50px;
@@ -40,5 +36,13 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; /* Display ellipsis for overflowing text */
+    max-width: calc(100% - 60px); /* 100% - image width (50px) - image margin-right (10px) */
 }
 
+.manga-suggestions-container .list-group-item.suggestion-item {
+  width: 100%; /* Ensuring item takes full width of the container */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-width: 80vw; /* Matching the max-width of suggestion-item */
+  min-width: 80vw;
+}

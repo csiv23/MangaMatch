@@ -1,5 +1,5 @@
 import React from 'react';
-import './MangaSuggestions.css'; // Importing a new CSS file to style this component
+import './MangaSuggestions.css'; 
 
 function MangaSuggestions({ suggestions, handleSelectManga }) {
     return (
@@ -8,11 +8,11 @@ function MangaSuggestions({ suggestions, handleSelectManga }) {
                 {suggestions.map((suggestion) => (
                     <button
                         type="button"
-                        className="list-group-item list-group-item-action d-flex align-items-center suggestion-item" // Added a new class for styling
+                        className="list-group-item list-group-item-action d-flex align-items-center suggestion-item" // Added 'suggestion-item' classname
                         key={suggestion.manga_id}
                         onClick={() => handleSelectManga(suggestion)}
                     >
-                        <img src={suggestion.main_picture} alt={`${suggestion.title} cover`} className="suggestion-img" /> {/* Added a new class for styling */}
+                        <img src={suggestion.main_picture} alt={`${suggestion.title} cover`} className="suggestion-img" />
                         <div className="suggestion-text"> {/* Wrapped text in a div to apply styles */}
                             {suggestion.title}{suggestion.info ? ` - ${suggestion.info}` : ''}
                         </div>

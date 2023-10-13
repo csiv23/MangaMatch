@@ -18,8 +18,14 @@
   width: 100%;
   max-width: 400px;
   margin-bottom: 16px;
-  margin-top: 10vh; /* Moved the search bar up a bit */
+  margin-top: 2vh; /* Moved the search bar up a bit */
 }
+
+.suggestions-and-selections-container {
+  display: flex;
+  flex-direction: column;
+}
+
 
 .form-control {
   padding: 10px;
@@ -49,26 +55,39 @@
   left: 0;
   width: 100%;
   padding: 20px;
-  background-color: #f9f9f9; /* Optional: adjust the background color to match your color scheme */
-  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1); /* Optional: adding a subtle shadow for a better look */
+  background-color: #f9f9f9;
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .next-button {
-  width: 100%; /* Make the button take the full width of its container */
-  border: none; /* Remove border */
-  padding: 15px; /* Add padding for a larger, more clickable area */
-  font-size: 1em; /* Adjust font size */
-  color: #fff; /* Adjust font color */
-  background-color: #0d6efd; /* Adjust background color to match your color scheme */
-  border-radius: 8px; /* Optional: add border-radius for rounded corners */
-  cursor: pointer; /* Change cursor to pointer on hover */
-  transition: background-color 0.3s; /* Optional: add transition for a smooth color change on hover */
+  width: 100%;
+  border: none;
+  padding: 15px;
+  font-size: 1em;
+  color: #fff;
+  background-color: #0d6efd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .next-button:hover {
-  background-color: #0056b3; /* Optional: change background color on hover for a visual feedback */
+  background-color: #0056b3;
 }
 
+/* Updated Media query for desktop */
+@media (min-width: 768px) {
+  .next-button-container {
+    padding: 10px; /* Reduced padding to provide more space for the content */
+  }
+  
+  .next-button {
+    width: 50%; /* Reduced width to give the button a more proportional look on desktop screens */
+    margin: auto; /* Center the button horizontally */
+    padding: 10px; /* Reduced padding to make the button smaller */
+    font-size: 0.8em; /* Reduced font size to maintain proportionality with the smaller button size */
+  }
+}
 
 @media (max-width: 768px) {
   .input-group {
