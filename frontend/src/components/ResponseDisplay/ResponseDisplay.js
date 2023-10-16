@@ -27,7 +27,7 @@ function ResponseDisplay() {
                         <div className="card m-2" style={{ width: '18rem' }} key={index}>
                             <img src={manga.main_picture} alt={`${manga.title} cover`} className="card-img-top manga-image" />
                             <div className="card-body manga-text">
-                                <h5 className="card-title">
+                                <h5 className="card-title mb-2">
                                     <a href={manga.url} target="_blank" rel="noopener noreferrer">{manga.title}</a>
                                 </h5>
                                 <h6 className="card-subtitle mb-2 text-muted">{manga.type} - Score: {manga.score}</h6>
