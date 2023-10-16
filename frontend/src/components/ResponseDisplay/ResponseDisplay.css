@@ -10,6 +10,11 @@
     justify-content: space-between;
 }
 
+.card-title {
+    font-size: 1em;
+    font-weight: bold;
+    color: #007bff;
+}
 
 .read-more {
     color: #007bff;
@@ -20,4 +25,33 @@
     align-self: flex-end;
     font-size: 0.8em;
     color: #007bff;
+}
+
+.card-text {
+    overflow: auto;
+    font-size: 0.7em;
+    height:100%;
+}
+
+.card-text.expanded {
+    /* For the expanded state */
+    max-height: none; /* Remove height limit */
+    overflow: visible; /* Show full content */
+}
+
+.read-more {
+    color: #007bff;
+    cursor: pointer;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: white;
+    padding: 5px 10px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    transition: transform 0.2s; /* Add a transition for smooth animation */
+}
+
+.read-more.expanded {
+    transform: rotate(180deg); /* Rotate arrow when expanded */
 }
