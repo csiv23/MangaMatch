@@ -30,11 +30,18 @@ function SearchBar() {
         try {
             const response = await fetch(`/api/search/suggestions?title=${query}&limit=6`);
             const data = await response.json();
-            setSuggestions(data);
+            if (data.length === 0) {
+                // If no suggestions are found, set a special value like an empty array
+                setSuggestions([]);
+            } else {
+                setSuggestions(data);
+            }
         } catch (error) {
             console.error('Error fetching suggestions:', error);
+            setSuggestions([]); // handle error by setting suggestions to an empty array
         }
     };
+
 
 
     const handleRemoveManga = (index) => {
@@ -60,14 +67,14 @@ function SearchBar() {
                     ? prevSelectedMangaTitles.filter(title => title !== suggestion.title)
                     : [...prevSelectedMangaTitles, suggestion.title]
             );
-            
+
             // Instead of clearing the query and suggestions, fetch new suggestions
             fetchSuggestions('a'); // or keep the current query if you want to maintain the current suggestions
         } else {
             console.error('Suggestion object is missing necessary properties', suggestion);
         }
     };
-    
+
     useEffect(() => {
         fetchSuggestions('a'); // Fetch suggestions with an empty query string on component mount
     }, []); // Empty dependency array to ensure it runs only once on mount
@@ -95,14 +102,17 @@ function SearchBar() {
 
             <div className="suggestionsAndSelectionsWrapper">
                 <div className="suggestions-container">
-                    {
-                        suggestions.length > 0 &&
+                    {suggestions.length > 0 ? (
                         <MangaSuggestions
                             suggestions={windowWidth > 1024 ? suggestions.slice(0, 4) : suggestions.slice(0, 5)}
                             handleSelectManga={handleSelectManga}
                         />
-                    }
+                    ) : (
+                        // Display a message if no suggestions are found
+                        <p className="no-results-message">No manga found. Try a different search!</p>
+                    )}
                 </div>
+
                 <div className="selections-container">
                     <SelectedMangaList selectedMangaTitles={selectedMangaTitles} handleRemoveManga={handleRemoveManga} />
                 </div>
