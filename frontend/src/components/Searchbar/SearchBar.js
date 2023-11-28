@@ -60,13 +60,14 @@ function SearchBar() {
                     ? prevSelectedMangaTitles.filter(title => title !== suggestion.title)
                     : [...prevSelectedMangaTitles, suggestion.title]
             );
-            setQuery('');
-            setSuggestions([]);
+            
+            // Instead of clearing the query and suggestions, fetch new suggestions
+            fetchSuggestions('a'); // or keep the current query if you want to maintain the current suggestions
         } else {
             console.error('Suggestion object is missing necessary properties', suggestion);
         }
     };
-
+    
     useEffect(() => {
         fetchSuggestions('a'); // Fetch suggestions with an empty query string on component mount
     }, []); // Empty dependency array to ensure it runs only once on mount
@@ -97,10 +98,13 @@ function SearchBar() {
                     {
                         suggestions.length > 0 &&
                         <MangaSuggestions
-                            suggestions={windowWidth > 1024 ? suggestions.slice(0, 4) : suggestions.slice(0,5)}
+                            suggestions={windowWidth > 1024 ? suggestions.slice(0, 4) : suggestions.slice(0, 5)}
                             handleSelectManga={handleSelectManga}
                         />
                     }
+                </div>
+                <div className="selections-container">
+                    <SelectedMangaList selectedMangaTitles={selectedMangaTitles} handleRemoveManga={handleRemoveManga} />
                 </div>
             </div>
 
