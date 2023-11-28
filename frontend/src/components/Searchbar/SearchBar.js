@@ -97,7 +97,7 @@ function SearchBar() {
                     {
                         suggestions.length > 0 &&
                         <MangaSuggestions
-                            suggestions={windowWidth > 1024 ? suggestions.slice(0, 3) : suggestions.slice(0,4)}
+                            suggestions={windowWidth > 1024 ? suggestions.slice(0, 4) : suggestions.slice(0,5)}
                             handleSelectManga={handleSelectManga}
                         />
                     }

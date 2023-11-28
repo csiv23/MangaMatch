@@ -5,6 +5,7 @@
   }
   
   .suggestion-img {
+    height: 70px;
     width: 50px;
     margin-right: 10px;
   }
@@ -26,11 +27,6 @@
 
 }
 
-.suggestion-img {
-    width: 50px;
-    margin-right: 10px;
-    
-}
 
 .suggestion-text {
     white-space: nowrap;

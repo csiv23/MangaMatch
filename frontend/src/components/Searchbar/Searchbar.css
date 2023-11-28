@@ -43,7 +43,7 @@
   width: 100%; /* Set a fixed width */
   max-width: 400px; /* Set a max-width to maintain a uniform width */
   min-width: 300px;
-  height: 88px; /* Set a fixed height */
+  height: 70px; /* Set a fixed height */
   white-space: nowrap; /* Keeps text in a single line */
   overflow: hidden; /* Hide the overflow text */
   text-overflow: ellipsis; /* Display ellipsis (...) to represent the clipped text */
