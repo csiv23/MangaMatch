@@ -104,7 +104,7 @@ function SearchBar() {
                 <div className="suggestions-container">
                     {suggestions.length > 0 ? (
                         <MangaSuggestions
-                            suggestions={windowWidth > 1024 ? suggestions.slice(0, 4) : suggestions.slice(0, 5)}
+                            suggestions={windowWidth > 1024 ? suggestions : suggestions.slice(0, 5)}
                             handleSelectManga={handleSelectManga}
                         />
                     ) : (
