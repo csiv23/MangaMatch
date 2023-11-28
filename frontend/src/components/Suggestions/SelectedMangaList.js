@@ -4,19 +4,18 @@ import './SelectedMangaList.css'; // Importing a new CSS file to style this comp
 function SelectedMangaList({ selectedMangaTitles = [], handleRemoveManga }) {
     return (
         selectedMangaTitles.length > 0 && (
-            <div className="d-flex flex-wrap mb-3" style={{ gap: '8px' }}>
+            <div className="selected-manga-container"> {/* Updated class name */}
                 {selectedMangaTitles.map((title, index) => (
                     <div 
                         key={index} 
-                        className="selected-manga-item" // Added a new class for styling
+                        className="selected-manga-item"
                     >
-                        <span className="text-truncate" style={{ maxWidth: '80%' }}>{title}</span>
+                        <span className="text-truncate">{title}</span>
                         <button 
                             type="button" 
                             className="btn-close btn-close-black" 
                             aria-label="Close" 
                             onClick={() => handleRemoveManga(index)}
-                            style={{ fontSize: '1.1em' }}
                         ></button>
                     </div>
                 ))}
@@ -24,5 +23,6 @@ function SelectedMangaList({ selectedMangaTitles = [], handleRemoveManga }) {
         )
     );
 }
+
 
 export default SelectedMangaList;

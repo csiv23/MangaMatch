@@ -1,3 +1,16 @@
+.selected-manga-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-height: 200px; /* Adjust this value as needed */
+    overflow-y: auto; /* Enables vertical scrolling */
+    margin-bottom: 20px; /* Space below the container */
+    padding: 10px; /* Optional inner spacing */
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding is included in width */
+    justify-content: center;
+}
+
 .selected-manga-item {
     display: flex;
     justify-content: space-between;
@@ -5,11 +18,9 @@
     padding: 0.5rem;
     background: #f0f0f0;
     border-radius: 12px;
-    max-width: 500%;
     font-size: 0.9em;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis; /* Display ellipsis for overflowing text */
+    max-width: 100%; /* To prevent overflow */
 }
-
-
