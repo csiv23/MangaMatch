@@ -13,8 +13,18 @@ function SearchBar() {
     } = useContext(MangaContext);
     const [query, setQuery] = useState('');
     const [suggestions, setSuggestions] = useState([]);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     const navigate = useNavigate();
+
+    const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const fetchSuggestions = async (query) => {
         try {
@@ -25,6 +35,7 @@ function SearchBar() {
             console.error('Error fetching suggestions:', error);
         }
     };
+
 
     const handleRemoveManga = (index) => {
         const newSelectedMangaIds = [...selectedMangaIds];
@@ -81,12 +92,15 @@ function SearchBar() {
                 />
             </div>
 
-            <div className="suggestionsAndSelectionsWrapper">  
+            <div className="suggestionsAndSelectionsWrapper">
                 <div className="suggestions-container">
-                    {suggestions.length > 0 && <MangaSuggestions suggestions={suggestions} handleSelectManga={handleSelectManga} />}
-                </div>
-                <div className="selections-container">
-                    <SelectedMangaList selectedMangaTitles={selectedMangaTitles} handleRemoveManga={handleRemoveManga} />
+                    {
+                        suggestions.length > 0 &&
+                        <MangaSuggestions
+                            suggestions={windowWidth > 1024 ? suggestions.slice(0, 3) : suggestions.slice(0,4)}
+                            handleSelectManga={handleSelectManga}
+                        />
+                    }
                 </div>
             </div>
 
