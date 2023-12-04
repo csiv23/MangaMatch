@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 
-const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/MangaMatch';
+const mongoURI = process.env.MONGODB_URI;
 
 // Function to establish connection to the database
 module.exports = async function dbConnection() {

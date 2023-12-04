@@ -1,7 +1,7 @@
 // removeNullScoreManga.js
 const MongoClient = require('mongodb').MongoClient;
 
-const uri = 'mongodb://localhost:27017';
+const uri = process.env.MONGODB_URI;
 const dbName = 'MangaMatch';
 const collectionName = 'Manga2';
 
